@@ -42,8 +42,9 @@ export function Login() {
         const data = result.data
         sessionStorage['token'] = data.token
         sessionStorage['usertype'] = 'Faculty'
+         sessionStorage['rolename'] = data.rolename 
         toast.success('Faculty login successful')
-        navigate('/dashboard')
+        navigate('/Home')
       } else {
         const err = result?.error || ''
         if (err.toLowerCase().includes('course selection required')) {
@@ -63,7 +64,7 @@ export function Login() {
         sessionStorage['usertype'] = 'Admin'
         sessionStorage['adminId'] = data.adminId
         toast.success('Admin login successful')
-        navigate('/admin/dashboard')
+        navigate('/admin/Home')
       } else {
         toast.error(result?.error || 'Invalid email or password')
       }

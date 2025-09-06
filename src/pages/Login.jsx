@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { login } from '../services/faculty'
+import { login as facultyLogin } from '../services/faculty'
+import { login as adminLogin } from '../services/admin'
+
 
 export function Login() {
+  const [userType, setUserType] = useState('faculty') // faculty or admin
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [courseId, setCourseId] = useState('')
@@ -21,44 +24,48 @@ export function Login() {
       return
     }
 
-    // If course selection is already requested, send course_id too
-    if (showCourseSelect) {
-      if (!courseId) {
-        toast.warn('Select course')
-        return
+    let result
+
+    if (userType === 'faculty') {
+      // Handle faculty login
+      if (showCourseSelect) {
+        if (!courseId) {
+          toast.warn('Select course')
+          return
+        }
+        result = await facultyLogin(email, password, courseId)
+      } else {
+        result = await facultyLogin(email, password)
       }
-      const result = await login(email, password, courseId)
-      console.log('API result (with course):', result)
 
       if (result?.status === 'success') {
         const data = result.data
         sessionStorage['token'] = data.token
-        toast.success('Login successful')
+        sessionStorage['usertype'] = 'Faculty'
+        toast.success('Faculty login successful')
         navigate('/dashboard')
       } else {
-        toast.error(result?.error || 'Something went wrong')
+        const err = result?.error || ''
+        if (err.toLowerCase().includes('course selection required')) {
+          setShowCourseSelect(true)
+          toast.info('Please select a course to continue')
+        } else {
+          toast.error(err || 'Something went wrong')
+        }
       }
+    } else if (userType === 'admin') {
+      // Handle admin login
+      result = await adminLogin(email, password)
 
-      return
-    }
-
-    // First try: login without course_id
-    const result = await login(email, password)
-    console.log('API result:', result)
-
-    if (result?.status === 'success') {
-      const data = result.data
-      sessionStorage['token'] = data.token
-      toast.success('Login successful')
-      navigate('/dashboard')
-    } else {
-      const err = result?.error || ''
-      // If backend requires course selection for CC, show the dropdown
-      if (err.toLowerCase().includes('course selection required')) {
-        setShowCourseSelect(true)
-        toast.info('Please select a course to continue')
+      if (result?.status === 'success') {
+        const data = result.data
+        sessionStorage['token'] = data.token
+        sessionStorage['usertype'] = 'Admin'
+        sessionStorage['adminId'] = data.adminId
+        toast.success('Admin login successful')
+        navigate('/admin/dashboard')
       } else {
-        toast.error(err || 'Something went wrong')
+        toast.error(result?.error || 'Invalid email or password')
       }
     }
   }
@@ -71,10 +78,26 @@ export function Login() {
         <div className="col"></div>
         <div className="col">
           <div className="form">
+            {/* User type selection */}
+            <div className="mb-3">
+              <label>Login As</label>
+              <select
+                value={userType}
+                onChange={(e) => {
+                  setUserType(e.target.value)
+                  setShowCourseSelect(false) // reset when switching type
+                }}
+                className="form-control"
+              >
+                <option value="faculty">Faculty</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
             <div className="mb-3">
               <label>Email</label>
               <input
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="abc@test.com"
                 className="form-control"
@@ -85,21 +108,21 @@ export function Login() {
             <div className="mb-3">
               <label>Password</label>
               <input
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                placeholder="XXXXXXXXX"
+                placeholder="********"
                 className="form-control"
                 value={password}
               />
             </div>
 
-            {/* Show course dropdown only when backend requested it */}
-            {showCourseSelect && (
+            {/* Faculty only: Show course dropdown when required */}
+            {userType === 'faculty' && showCourseSelect && (
               <div className="mb-3">
                 <label>Select Course</label>
                 <select
                   value={courseId}
-                  onChange={e => setCourseId(e.target.value)}
+                  onChange={(e) => setCourseId(e.target.value)}
                   className="form-control"
                 >
                   <option value="">-- Select Course --</option>
@@ -113,7 +136,8 @@ export function Login() {
 
             <div className="mb-3">
               <div>
-                Don&apos;t have an account? <Link to="/register">Register here</Link>
+                Don&apos;t have an account?{' '}
+                <Link to="/register">Register here</Link>
               </div>
               <button onClick={onLogin} className="btn btn-primary mt-2">
                 Login
@@ -126,6 +150,7 @@ export function Login() {
     </>
   )
 }
+
 
 export default Login
 

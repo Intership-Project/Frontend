@@ -56,6 +56,7 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      {/* Header with Logout */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>Schedule Feedbacks</h1>
         <button
@@ -64,7 +65,7 @@ export default function AdminDashboard() {
             backgroundColor: '#e74c3c',
             color: '#fff',
             border: 'none',
-            padding: '8px 15px',
+            padding: '6px 15px',
             borderRadius: '5px',
             cursor: 'pointer',
             fontWeight: 'bold'
@@ -74,14 +75,14 @@ export default function AdminDashboard() {
         </button>
       </div>
 
+      {/* Table */}
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
             <th style={{ padding: '10px' }}>ID</th>
             <th>Course</th>
             <th>Subject</th>
-            <th>Faculty</th>
-            <th>Batch</th>
+            <th>Feedback Type</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Actions</th>
@@ -93,8 +94,7 @@ export default function AdminDashboard() {
               <td style={{ padding: '10px', textAlign: 'center' }}>{fb.schedulefeedback_id}</td>
               <td>{fb.coursename}</td>
               <td>{fb.subjectname}</td>
-              <td>{fb.facultyname}</td>
-              <td>{fb.batchname || 'N/A'}</td>
+              <td>{fb.fbtypename || 'N/A'}</td>
               <td>{new Date(fb.StartDate).toLocaleDateString()}</td>
               <td>{new Date(fb.EndDate).toLocaleDateString()}</td>
               <td>
@@ -131,7 +131,7 @@ export default function AdminDashboard() {
         </tbody>
       </table>
 
-     
+      
     </div>
   );
 }

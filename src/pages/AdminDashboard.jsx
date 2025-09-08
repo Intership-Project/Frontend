@@ -1,121 +1,136 @@
-// import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { fetchAllScheduleFeedbacks, deleteScheduleFeedback } from '../services/schedulefeedback';
 
-// export function AdminDashboard() {
-//   return (
-//     <div>
-//       <h1>Admin Dashboard</h1>
-//       <p>Welcome to the admin dashboard where you can manage the system.</p>
-//     </div>
-//   )
-// }
-
-// export default AdminDashboard
-// AdminDashboard.jsx
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-
-const AdminDashboard = () => {
+export default function AdminDashboard() {
   const [feedbacks, setFeedbacks] = useState([]);
-  const [feedbackTypes, setFeedbackTypes] = useState({});
-  const [moduleTypes, setModuleTypes] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Fetch schedule feedbacks
-  const fetchFeedbacks = async () => {
+  const loadFeedbacks = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/schedulefeedback");
-      if (res.data.status === "success") {
-        setFeedbacks(res.data.data);
-      } else {
-        setError("Failed to fetch schedule feedbacks");
+      const response = await fetchAllScheduleFeedbacks();
+
+      if (response.status === 'error') {
+        alert(response.error);
+        window.location.href = '/login';
+        return;
       }
+
+      setFeedbacks(response.data);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      console.error(err);
+      alert('Failed to fetch schedule feedbacks');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Fetch feedback type table
-  const fetchFeedbackTypes = async () => {
-    try {
-      const res = await axios.get("http://localhost:4000/feedbacktypes"); // Adjust route
-      if (res.data.status === "success") {
-        const map = {};
-        res.data.data.forEach((ft) => {
-          map[ft.feedbacktype_id] = ft.feedbacktype_name;
-        });
-        setFeedbackTypes(map);
-      }
-    } catch (err) {
-      console.error(err);
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this feedback?')) return;
+
+    const response = await deleteScheduleFeedback(id);
+
+    if (response.status === 'error') {
+      alert(`Delete failed: ${response.error}`);
+    } else {
+      alert('Deleted successfully');
+      setFeedbacks(feedbacks.filter(fb => fb.schedulefeedback_id !== id));
     }
   };
 
-  // Fetch feedback module type table
-  const fetchModuleTypes = async () => {
-    try {
-      const res = await axios.get("http://localhost:4000/feedbackmoduletypes"); // Adjust route
-      if (res.data.status === "success") {
-        const map = {};
-        res.data.data.forEach((mt) => {
-          map[mt.feedbackmoduletype_id] = mt.feedbackmoduletype_name;
-        });
-        setModuleTypes(map);
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleLogout = () => {
+    sessionStorage.clear();
+    window.location.href = '/login';
   };
 
   useEffect(() => {
-    const fetchAll = async () => {
-      setLoading(true);
-      await Promise.all([fetchFeedbacks(), fetchFeedbackTypes(), fetchModuleTypes()]);
-      setLoading(false);
-    };
-    fetchAll();
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      alert('Authentication required. Please login.');
+      window.location.href = '/login';
+      return;
+    }
+    loadFeedbacks();
   }, []);
 
-  if (loading) return <p className="text-center mt-4">Loading schedule feedbacks...</p>;
-  if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
+  if (loading) return <p>Loading schedule feedbacks...</p>;
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Schedule Feedbacks</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 shadow-sm rounded-lg">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Course</th>
-              <th className="py-2 px-4 border-b">Subject</th>
-              <th className="py-2 px-4 border-b">Faculty</th>
-              <th className="py-2 px-4 border-b">Batch</th>
-              <th className="py-2 px-4 border-b">Feedback Type</th>
-              <th className="py-2 px-4 border-b">Module Type</th>
-              <th className="py-2 px-4 border-b">Start Date</th>
-              <th className="py-2 px-4 border-b">End Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {feedbacks.map((f) => (
-              <tr key={f.schedulefeedback_id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b text-center">{f.schedulefeedback_id}</td>
-                <td className="py-2 px-4 border-b">{f.coursename}</td>
-                <td className="py-2 px-4 border-b">{f.subjectname}</td>
-                <td className="py-2 px-4 border-b">{f.facultyname}</td>
-                <td className="py-2 px-4 border-b">{f.batchname || "N/A"}</td>
-                <td className="py-2 px-4 border-b">{feedbackTypes[f.feedbacktype_id] || f.feedbacktype_id}</td>
-                <td className="py-2 px-4 border-b">{moduleTypes[f.feedbackmoduletype_id] || f.feedbackmoduletype_id}</td>
-                <td className="py-2 px-4 border-b">{new Date(f.StartDate).toLocaleDateString()}</td>
-                <td className="py-2 px-4 border-b">{new Date(f.EndDate).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1>Schedule Feedbacks</h1>
+        <button
+          onClick={handleLogout}
+          style={{
+            backgroundColor: '#e74c3c',
+            color: '#fff',
+            border: 'none',
+            padding: '6px 15px',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Logout
+        </button>
       </div>
+
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
+          <tr>
+            <th style={{ padding: '10px' }}>ID</th>
+            <th>Course</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+            <th>Batch</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {feedbacks.map(fb => (
+            <tr key={fb.schedulefeedback_id} style={{ borderBottom: '1px solid #ddd' }}>
+              <td style={{ padding: '10px', textAlign: 'center' }}>{fb.schedulefeedback_id}</td>
+              <td>{fb.coursename}</td>
+              <td>{fb.subjectname}</td>
+              <td>{fb.facultyname}</td>
+              <td>{fb.batchname || 'N/A'}</td>
+              <td>{new Date(fb.StartDate).toLocaleDateString()}</td>
+              <td>{new Date(fb.EndDate).toLocaleDateString()}</td>
+              <td>
+                <button
+                  onClick={() => window.location.href = `/admin/edit-schedule/${fb.schedulefeedback_id}`}
+                  style={{
+                    backgroundColor: '#3498db',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    marginRight: '5px'
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(fb.schedulefeedback_id)}
+                  style={{
+                    backgroundColor: '#e74c3c',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
     </div>
   );
-};
-
-export default AdminDashboard;
+}

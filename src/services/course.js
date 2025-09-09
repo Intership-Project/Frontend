@@ -1,69 +1,61 @@
-import axios from 'axios'
-import { createUrl } from './utils'
+// services/course.js
+import axios from 'axios';
+import { createError, createUrl } from './utils';
 
-// Get token from sessionStorage
-const getToken = () => sessionStorage.getItem('token')
+function getToken() {
+  const token = sessionStorage.getItem('token');
+  if (!token) throw new Error('Auth token not found. Please login.');
+  return token;
+}
 
 // GET all courses
-export const getCourses = async () => {
+export async function getCourses() {
   try {
     const res = await axios.get(createUrl('course'), {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    })
-    return res.data
+      headers: { token: getToken() },
+    });
+    return res.data;
   } catch (err) {
-    return { status: 'error', error: err.response?.data?.error || err.message }
+    console.error('GET /course error:', err.response || err.message);
+    return createError(err.response?.data?.error || err.message);
   }
 }
 
-// CREATE a new course
-export const createCourse = async (coursename) => {
+// CREATE a course
+export async function createCourse(data) {
   try {
-    const res = await axios.post(
-      createUrl('course'),
-      { coursename },
-      {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
-    )
-    return res.data
+    const res = await axios.post(createUrl('course'), data, {
+      headers: { token: getToken() },
+    });
+    return res.data;
   } catch (err) {
-    return { status: 'error', error: err.response?.data?.error || err.message }
+    console.error('POST /course error:', err.response || err.message);
+    return createError(err.response?.data?.error || err.message);
   }
 }
 
-// UPDATE course
-export const updateCourse = async (course_id, coursename) => {
+// UPDATE a course
+export async function updateCourse(id, data) {
   try {
-    const res = await axios.put(
-      createUrl(`course/${course_id}`),
-      { coursename },
-      {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
-    )
-    return res.data
+    const res = await axios.put(createUrl(`course/${id}`), data, {
+      headers: { token: getToken() },
+    });
+    return res.data;
   } catch (err) {
-    return { status: 'error', error: err.response?.data?.error || err.message }
+    console.error(`PUT /course/${id} error:`, err.response || err.message);
+    return createError(err.response?.data?.error || err.message);
   }
 }
 
-// DELETE course
-export const deleteCourse = async (course_id) => {
+// DELETE a course
+export async function deleteCourse(id) {
   try {
-    const res = await axios.delete(createUrl(`course/${course_id}`), {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    })
-    return res.data
+    const res = await axios.delete(createUrl(`course/${id}`), {
+      headers: { token: getToken() },
+    });
+    return res.data;
   } catch (err) {
-    return { status: 'error', error: err.response?.data?.error || err.message }
+    console.error(`DELETE /course/${id} error:`, err.response || err.message);
+    return createError(err.response?.data?.error || err.message);
   }
 }

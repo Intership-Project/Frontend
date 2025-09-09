@@ -34,6 +34,8 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import AdminLayout from './pages/AdminLayout';
 import AdminDashboard from './pages/AdminDashboard';
+import Faculty from './pages/Faculty';
+
 import Course from './pages/Course'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,6 +55,8 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
              <Route path="courses" element={<Course />} />
+             <Route path="faculty" element={<Faculty />} />
+
           </Route>
         </Routes>
 

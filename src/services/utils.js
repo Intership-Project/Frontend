@@ -7,15 +7,11 @@ export function createUrl(path) {
 }
 
 export function createError(error) {
-<<<<<<< Updated upstream
-    return { status : 'error', error }
 
-}
-=======
   return { status: 'error', error };
 }
 
 export function createSuccess(data) {
   return { status: 'success', data };
 }
->>>>>>> Stashed changes
+

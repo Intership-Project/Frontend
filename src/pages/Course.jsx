@@ -1,11 +1,9 @@
-// pages/Course.jsx
 import React, { useEffect, useState } from 'react';
 import { createCourse, deleteCourse, getCourses, updateCourse } from '../services/course';
 
 export default function Course() {
   const [courses, setCourses] = useState([]);
-  const [coursename, setCoursename] = useState('');
-  const [editingCourse, setEditingCourse] = useState(null);
+  const [coursename, setCoursename] = useState(''); // permanent input
   const [loading, setLoading] = useState(true);
 
   // Load courses from backend
@@ -25,32 +23,35 @@ export default function Course() {
     }
   };
 
-  // Add or update course
-  const handleSave = async () => {
-    if (!coursename) return alert('Enter course name');
+  // Add course
+  const handleAddCourse = async () => {
+    if (!coursename.trim()) return alert('Enter course name');
     try {
-      if (editingCourse) {
-        const response = await updateCourse(editingCourse.course_id, { coursename });
-        if (response.status === 'error') return alert(response.error);
-        setCourses(courses.map(c => c.course_id === editingCourse.course_id ? { ...c, coursename } : c));
-        setEditingCourse(null);
-      } else {
-        const response = await createCourse({ coursename });
-        if (response.status === 'error') return alert(response.error);
-        setCourses([...courses, response.data]);
-      }
-      setCoursename('');
+      const response = await createCourse({ coursename });
+      if (response.status === 'error') return alert(response.error);
+      setCourses([...courses, response.data]);
+      setCoursename(''); // clear input after adding
     } catch (err) {
-      alert('Error saving course');
+      alert('Error adding course');
       console.error(err);
     }
   };
 
-  const handleEdit = (course) => {
-    setEditingCourse(course);
-    setCoursename(course.coursename);
+  // Edit course (prompt for new name)
+  const handleEdit = async (course) => {
+    const updatedName = prompt('Enter new course name', course.coursename);
+    if (!updatedName) return;
+    try {
+      const response = await updateCourse(course.course_id, { coursename: updatedName });
+      if (response.status === 'error') return alert(response.error);
+      setCourses(courses.map(c => c.course_id === course.course_id ? { ...c, coursename: updatedName } : c));
+    } catch (err) {
+      alert('Error updating course');
+      console.error(err);
+    }
   };
 
+  // Delete course
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this course?')) return;
     try {
@@ -61,11 +62,6 @@ export default function Course() {
       alert('Error deleting course');
       console.error(err);
     }
-  };
-
-  const handleLogout = () => {
-    sessionStorage.clear();
-    window.location.href = '/login';
   };
 
   useEffect(() => {
@@ -82,11 +78,9 @@ export default function Course() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <h1>Courses</h1>
-        <button onClick={handleLogout} style={{ backgroundColor: '#e74c3c', color: '#fff', padding: '6px 15px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Logout</button>
-      </div>
+      <h1 style={{ marginBottom: '20px' }}>Courses</h1>
 
+      {/* Input field + Add button */}
       <div style={{ marginBottom: '20px' }}>
         <input
           type="text"
@@ -95,16 +89,22 @@ export default function Course() {
           placeholder="Enter course name"
           style={{ padding: '8px', marginRight: '10px', width: '250px' }}
         />
-        <button onClick={handleSave} style={{ padding: '8px 15px', backgroundColor: '#2ecc71', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-          {editingCourse ? 'Update Course' : 'Add Course'}
+        <button
+          onClick={handleAddCourse}
+          style={{
+            padding: '8px 15px',
+            backgroundColor: '#2ecc71',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Add Course
         </button>
-        {editingCourse && (
-          <button onClick={() => { setEditingCourse(null); setCoursename(''); }} style={{ padding: '8px 15px', marginLeft: '10px', backgroundColor: '#95a5a6', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-            Cancel
-          </button>
-        )}
       </div>
 
+      {/* Courses Table */}
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
@@ -119,8 +119,33 @@ export default function Course() {
               <td style={{ padding: '10px', textAlign: 'center' }}>{c.course_id}</td>
               <td>{c.coursename}</td>
               <td>
-                <button onClick={() => handleEdit(c)} style={{ backgroundColor: '#3498db', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px', marginRight: '5px', cursor: 'pointer' }}>Edit</button>
-                <button onClick={() => handleDelete(c.course_id)} style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}>Delete</button>
+                <button
+                  onClick={() => handleEdit(c)}
+                  style={{
+                    backgroundColor: '#3498db',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    marginRight: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(c.course_id)}
+                  style={{
+                    backgroundColor: '#e74c3c',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

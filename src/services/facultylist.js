@@ -1,4 +1,5 @@
-// src/services/facultylist.js
+
+
 import axios from 'axios';
 import { createError, createUrl } from './utils';
 
@@ -20,6 +21,37 @@ export async function fetchAllFaculty() {
   }
 }
 
+export async function addFaculty(data) {
+  try {
+    const res = await axios.post(createUrl('faculty/register'), data, {
+      headers: { token: getToken() },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('API add error:', error.response || error.message);
+    return createError(error.response?.data?.error || error.message);
+  }
+}
+
+export async function updateFaculty(id, data) {
+  try {
+    // Backend expects only facultyname, email, role_id
+    const payload = {
+      facultyname: data.facultyname || null,
+      email: data.email || null,
+      role_id: data.role_id || null
+    };
+
+    const res = await axios.put(createUrl(`faculty/profile`), payload, {
+      headers: { token: getToken() },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('API update error:', error.response || error.message);
+    return createError(error.response?.data?.error || error.message);
+  }
+}
+
 export async function deleteFaculty(id) {
   try {
     const res = await axios.delete(createUrl(`faculty/${id}`), {
@@ -32,14 +64,75 @@ export async function deleteFaculty(id) {
   }
 }
 
-export async function updateFaculty(id, data) {
+
+import axios from 'axios';
+
+const API_BASE = 'http://localhost:4000';
+const getToken = () => sessionStorage.getItem('token');
+
+const handleError = (error) => ({
+  status: 'error',
+  error: error.response?.data?.error || error.message
+});
+
+export const fetchAllFaculty = async () => {
   try {
-    const res = await axios.put(createUrl(`faculty/profile`), data, {
-      headers: { token: getToken() },
-    });
+    const res = await axios.get(`${API_BASE}/faculty`, { headers: { token: getToken() } });
     return res.data;
-  } catch (error) {
-    console.error('API update error:', error.response || error.message);
-    return createError(error.response?.data?.error || error.message);
+  } catch (err) {
+    return handleError(err);
   }
-}
+};
+
+export const fetchAllCourses = async () => {
+  try {
+    const res = await axios.get(`${API_BASE}/course`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const addFaculty = async (data) => {
+  try {
+    const payload = {
+      facultyname: data.facultyname || null,
+      email: data.email || null,
+      password: data.password || null,
+      role_id: Number(data.role_id) || null,
+      course_id: data.role_id === 7 ? (data.course_id ? Number(data.course_id) : null) : null
+    };
+    const res = await axios.post(`${API_BASE}/faculty/register`, payload, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const updateFaculty = async (id, data) => {
+  try {
+    const payload = {
+      facultyname: data.facultyname || null,
+      email: data.email || null,
+      role_id: Number(data.role_id) || null,
+      course_id: data.role_id === 7 ? (data.course_id ? Number(data.course_id) : null) : null
+    };
+    const res = await axios.put(`${API_BASE}/faculty/profile`, payload, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const deleteFaculty = async (id) => {
+  try {
+    const res = await axios.delete(`${API_BASE}/faculty/${id}`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+
+
+

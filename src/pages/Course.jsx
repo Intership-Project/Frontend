@@ -1,92 +1,156 @@
-import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import { deleteCourse, getCourses, updateCourse } from '../services/course'
+import React, { useEffect, useState } from 'react';
+import { createCourse, deleteCourse, getCourses, updateCourse } from '../services/course';
 
 export default function Course() {
-  const [courses, setCourses] = useState([])
-  const [editingCourse, setEditingCourse] = useState(null)
-  const [courseName, setCourseName] = useState('')
+  const [courses, setCourses] = useState([]);
+  const [coursename, setCoursename] = useState(''); // permanent input
+  const [loading, setLoading] = useState(true);
 
-  // Fetch backend courses
-  const fetchCourses = async () => {
-    const result = await getCourses()
-    if (result.status === 'success') setCourses(result.data)
-    else toast.error(result.error || 'Failed to fetch courses')
-  }
+  // Load courses from backend
+  const loadCourses = async () => {
+    try {
+      const response = await getCourses();
+      if (response.status === 'error') {
+        alert(response.error);
+        return;
+      }
+      setCourses(response.data || []);
+    } catch (err) {
+      alert('Failed to fetch courses');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  useEffect(() => {
-    fetchCourses()
-  }, [])
+  // Add course
+  const handleAddCourse = async () => {
+    if (!coursename.trim()) return alert('Enter course name');
+    try {
+      const response = await createCourse({ coursename });
+      if (response.status === 'error') return alert(response.error);
+      setCourses([...courses, response.data]);
+      setCoursename(''); // clear input after adding
+    } catch (err) {
+      alert('Error adding course');
+      console.error(err);
+    }
+  };
 
-  // Edit course
-  const handleEdit = (course) => {
-    setEditingCourse(course)
-    setCourseName(course.coursename)
-  }
-
-  const handleUpdate = async () => {
-    if (!courseName.trim()) return toast.warn('Enter course name')
-    const result = await updateCourse(editingCourse.course_id, courseName)
-    if (result.status === 'success') {
-      toast.success('Course updated')
-      setEditingCourse(null)
-      setCourseName('')
-      fetchCourses()
-    } else toast.error(result.error || 'Update failed')
-  }
+  // Edit course (prompt for new name)
+  const handleEdit = async (course) => {
+    const updatedName = prompt('Enter new course name', course.coursename);
+    if (!updatedName) return;
+    try {
+      const response = await updateCourse(course.course_id, { coursename: updatedName });
+      if (response.status === 'error') return alert(response.error);
+      setCourses(courses.map(c => c.course_id === course.course_id ? { ...c, coursename: updatedName } : c));
+    } catch (err) {
+      alert('Error updating course');
+      console.error(err);
+    }
+  };
 
   // Delete course
-  const handleDelete = async (course_id) => {
-    if (!window.confirm('Are you sure?')) return
-    const result = await deleteCourse(course_id)
-    if (result.status === 'success') {
-      toast.success('Course deleted')
-      fetchCourses()
-    } else toast.error(result.error || 'Delete failed')
-  }
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete this course?')) return;
+    try {
+      const response = await deleteCourse(id);
+      if (response.status === 'error') return alert(response.error);
+      setCourses(courses.filter(c => c.course_id !== id));
+    } catch (err) {
+      alert('Error deleting course');
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      alert('Login required');
+      window.location.href = '/login';
+      return;
+    }
+    loadCourses();
+  }, []);
+
+  if (loading) return <p>Loading courses...</p>;
 
   return (
-    <div>
-      <h2>Course List</h2>
+    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+      <h1 style={{ marginBottom: '20px' }}>Courses</h1>
 
-      {editingCourse && (
-        <div className="mb-3">
-          <input
-            type="text"
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
-            className="form-control mb-2"
-          />
-          <button onClick={handleUpdate} className="btn btn-success me-2">Update</button>
-          <button onClick={() => { setEditingCourse(null); setCourseName('') }} className="btn btn-secondary">Cancel</button>
-        </div>
-      )}
+      {/* Input field + Add button */}
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          value={coursename}
+          onChange={(e) => setCoursename(e.target.value)}
+          placeholder="Enter course name"
+          style={{ padding: '8px', marginRight: '10px', width: '250px' }}
+        />
+        <button
+          onClick={handleAddCourse}
+          style={{
+            padding: '8px 15px',
+            backgroundColor: '#2ecc71',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Add Course
+        </button>
+      </div>
 
-      <table className="table table-striped table-bordered">
-        <thead className="table-dark">
+      {/* Courses Table */}
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
-            <th>Course ID</th>
+            <th style={{ padding: '10px' }}>ID</th>
             <th>Course Name</th>
-            <th>Extra Col 1</th>
-            <th>Extra Col 2</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {courses.map(course => (
-            <tr key={course.course_id}>
-              <td>{course.course_id}</td>
-              <td>{course.coursename}</td>
-              <td>{course.extra_col1 || '-'}</td>
-              <td>{course.extra_col || '-'}</td>
+          {courses.map(c => (
+            <tr key={c.course_id} style={{ borderBottom: '1px solid #ddd' }}>
+              <td style={{ padding: '10px', textAlign: 'center' }}>{c.course_id}</td>
+              <td>{c.coursename}</td>
               <td>
-                <button onClick={() => handleEdit(course)} className="btn btn-warning btn-sm me-2">Edit</button>
-                <button onClick={() => handleDelete(course.course_id)} className="btn btn-danger btn-sm">Delete</button>
+                <button
+                  onClick={() => handleEdit(c)}
+                  style={{
+                    backgroundColor: '#3498db',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    marginRight: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(c.course_id)}
+                  style={{
+                    backgroundColor: '#e74c3c',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  )
+  );
 }

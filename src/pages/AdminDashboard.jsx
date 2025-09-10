@@ -1,24 +1,40 @@
+
 import React, { useEffect, useState } from 'react';
 import { fetchAllScheduleFeedbacks, deleteScheduleFeedback } from '../services/schedulefeedback';
+import { fetchAllStudents } from '../services/student';
+import { fetchAllFaculty } from '../services/facultylist';
+import { getCourses } from '../services/course';
 
 export default function AdminDashboard() {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [faculty, setFaculty] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const loadFeedbacks = async () => {
+  const loadData = async () => {
     try {
-      const response = await fetchAllScheduleFeedbacks();
+      const [fbRes, stRes, faRes, coRes] = await Promise.all([
+        fetchAllScheduleFeedbacks(),
+        fetchAllStudents(),
+        fetchAllFaculty(),
+        getCourses()
+      ]);
 
-      if (response.status === 'error') {
-        alert(response.error);
+      if (fbRes.status === 'error' || stRes.status === 'error' || faRes.status === 'error' || coRes.status === 'error') {
+        alert('Error fetching data');
         window.location.href = '/login';
         return;
       }
 
-      setFeedbacks(response.data);
+      setFeedbacks(fbRes.data);
+      setStudents(stRes.data);
+      setFaculty(faRes.data);
+      setCourses(coRes.data);
+
     } catch (err) {
       console.error(err);
-      alert('Failed to fetch schedule feedbacks');
+      alert('Failed to fetch data');
     } finally {
       setLoading(false);
     }
@@ -26,15 +42,11 @@ export default function AdminDashboard() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this feedback?')) return;
-
-    const response = await deleteScheduleFeedback(id);
-
-    if (response.status === 'error') {
-      alert(`Delete failed: ${response.error}`);
-    } else {
-      alert('Deleted successfully');
+    const res = await deleteScheduleFeedback(id);
+    if (res.status === 'success') {
       setFeedbacks(feedbacks.filter(fb => fb.schedulefeedback_id !== id));
-    }
+      alert('Deleted successfully');
+    } else alert(`Delete failed: ${res.error}`);
   };
 
   const handleLogout = () => {
@@ -49,15 +61,17 @@ export default function AdminDashboard() {
       window.location.href = '/login';
       return;
     }
-    loadFeedbacks();
+    loadData();
   }, []);
 
-  if (loading) return <p>Loading schedule feedbacks...</p>;
+  if (loading) return <p>Loading dashboard...</p>;
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>Schedule Feedbacks</h1>
+    <div style={{ padding: '20px 20px 0 20px', fontFamily: 'Arial, sans-serif' }}>
+      
+      {/* Top Header: Admin Dashboard + Logout */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+        <h2 style={{ margin: 0, fontSize: '38px' }}>Admin Dashboard</h2>
         <button
           onClick={handleLogout}
           style={{
@@ -74,14 +88,33 @@ export default function AdminDashboard() {
         </button>
       </div>
 
+      {/* Summary Boxes */}
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '25px' }}>
+        <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1, textAlign:'center' }}>
+          <h4 style={{ margin: '0 0 5px 0' }}>Total Students</h4>
+          <p style={{ fontSize:'20px', fontWeight:'bold', margin:0 }}>{students.length}</p>
+        </div>
+        <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1, textAlign:'center' }}>
+          <h4 style={{ margin: '0 0 5px 0' }}>Total Faculty</h4>
+          <p style={{ fontSize:'20px', fontWeight:'bold', margin:0 }}>{faculty.length}</p>
+        </div>
+        <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1, textAlign:'center' }}>
+          <h4 style={{ margin: '0 0 5px 0' }}>Total Courses</h4>
+          <p style={{ fontSize:'20px', fontWeight:'bold', margin:0 }}>{courses.length}</p>
+        </div>
+      </div>
+
+      {/* Schedule Feedbacks Title */}
+      <h3 style={{ marginBottom: '10px', fontSize: '30px' }}>Schedule Feedbacks</h3>
+
+      {/* Schedule Feedback Table */}
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
             <th style={{ padding: '10px' }}>ID</th>
             <th>Course</th>
             <th>Subject</th>
-            <th>Faculty</th>
-            <th>Batch</th>
+            <th>Feedback Type</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Actions</th>
@@ -93,8 +126,7 @@ export default function AdminDashboard() {
               <td style={{ padding: '10px', textAlign: 'center' }}>{fb.schedulefeedback_id}</td>
               <td>{fb.coursename}</td>
               <td>{fb.subjectname}</td>
-              <td>{fb.facultyname}</td>
-              <td>{fb.batchname || 'N/A'}</td>
+              <td>{fb.fbtypename || 'N/A'}</td>
               <td>{new Date(fb.StartDate).toLocaleDateString()}</td>
               <td>{new Date(fb.EndDate).toLocaleDateString()}</td>
               <td>

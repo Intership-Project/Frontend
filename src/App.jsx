@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard';
 import AdminLayout from './pages/AdminLayout';
 import AdminDashboard from './pages/AdminDashboard';
 import Faculty from './pages/Faculty';
+import Student from './pages/Student';
+import Batch from './pages/Batch';
 
 import Course from './pages/Course'
 import { ToastContainer } from 'react-toastify';
@@ -28,6 +30,8 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
              <Route path="courses" element={<Course />} />
              <Route path="faculty" element={<Faculty />} />
+              <Route path="students" element={<Student />} />
+                 <Route path="batches" element={<Batch />} />
 
           </Route>
         </Routes>

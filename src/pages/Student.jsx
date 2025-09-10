@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { fetchAllStudents, addStudent, updateStudent, deleteStudent } from '../services/student';
 import { getCourses } from '../services/course';
@@ -108,12 +109,47 @@ export default function Student() {
     return batch ? batch.batchname : 'Unknown';
   };
 
+  // Calculate total students per course
+  const studentCountPerCourse = courses.map(c => ({
+    course_id: c.course_id,
+    coursename: c.coursename,
+    count: students.filter(s => s.course_id === c.course_id).length
+  }));
+
   if (loading) return <p>Loading students...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Student Management</h1>
+
+      {/* Summary Boxes for Students per Course */}
+      <div style={{
+        display: 'flex',
+        gap: '15px',
+        margin: '20px 0',
+        flexWrap: 'nowrap',
+        overflowX: 'auto'
+      }}>
+        {studentCountPerCourse.map(c => (
+          <div
+            key={c.course_id}
+            style={{
+              flex: '0 0 150px',
+              padding: '15px',
+              background: '#ecf0f1',
+              borderRadius: '8px',
+              textAlign: 'center',
+            }}
+          >
+            <h4 style={{ margin: '0 0 5px 0' }}>{c.coursename}</h4>
+            <p style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>
+              {c.count} Student{c.count !== 1 ? 's' : ''}
+            </p>
+          </div>
+        ))}
+      </div>
+
       <div style={{ marginBottom: '20px' }}>
         <button
           onClick={openAddModal}
@@ -122,6 +158,7 @@ export default function Student() {
           Add Student
         </button>
       </div>
+
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>

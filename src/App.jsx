@@ -1,18 +1,19 @@
 
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import AdminLayout from './pages/AdminLayout';
+import { Route, Routes } from "react-router-dom";
 import AdminDashboard from './pages/AdminDashboard';
-import Faculty from './pages/Faculty';
-import Student from './pages/Student';
+import AdminLayout from './pages/AdminLayout';
 import Batch from './pages/Batch';
+import Dashboard from './pages/Dashboard';
+import Faculty from './pages/Faculty';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Student from './pages/Student';
+import Subject from './pages/Subject';
 
-import Course from './pages/Course'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Course from './pages/Course';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
              <Route path="faculty" element={<Faculty />} />
               <Route path="students" element={<Student />} />
                  <Route path="batches" element={<Batch />} />
+                 <Route path="subjects" element={<Subject/>} />
 
           </Route>
         </Routes>

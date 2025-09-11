@@ -6,6 +6,8 @@ import AdminLayout from './pages/AdminLayout';
 import Batch from './pages/Batch';
 import Dashboard from './pages/Dashboard';
 import Faculty from './pages/Faculty';
+import FeedbackQuestion from './pages/FeedbackQuestion';
+import FeedbackType from './pages/FeedbackType';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Student from './pages/Student';
@@ -34,6 +36,8 @@ function App() {
               <Route path="students" element={<Student />} />
                  <Route path="batches" element={<Batch />} />
                  <Route path="subjects" element={<Subject/>} />
+                 <Route path="questions" element={<FeedbackQuestion/>} />
+                 <Route path="FeedbackTypes" element={<FeedbackType/>} />
 
           </Route>
         </Routes>

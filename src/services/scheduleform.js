@@ -1,43 +1,73 @@
-import { createUrl } from './utils';
+import axios from "axios";
+
+const API_BASE = "http://localhost:4000";
+const getToken = () => sessionStorage.getItem("token");
+
+const handleError = (err) => ({
+  status: "error",
+  error: err.response?.data?.error || err.message || "Unknown error",
+});
 
 // Courses
 export const getCourses = async () => {
-  const res = await fetch(createUrl('/course'));
-  const data = await res.json();
-  return data.status === 'success' ? data.data : [];
+  try {
+    const res = await axios.get(`${API_BASE}/course`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+// Batches by course
+export const getBatchesByCourse = async (courseId) => {
+  if (!courseId) return [];
+  try {
+    const res = await axios.get(`${API_BASE}/batch/course/${courseId}`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
 };
 
 // Subjects by course
-export const getSubjectsByCourse = async (course_id) => {
-  const res = await fetch(createUrl(`/subject/course/${course_id}`));
-  const data = await res.json();
-  return data.status === 'success' ? data.data : [];
+export const getSubjectsByCourse = async (courseId) => {
+  if (!courseId) return [];
+  try {
+    const res = await axios.get(`${API_BASE}/subject/course/${courseId}`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+// Faculties by role
+export const getFaculties = async (roleId) => {
+  if (!roleId) return [];
+  try {
+    const res = await axios.get(`${API_BASE}/faculty/role/${roleId}`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
 };
 
 // Feedback types
 export const getFeedbackTypes = async () => {
-  const res = await fetch(createUrl('/feedbacktype'));
-  const data = await res.json();
-  return data.status === 'success' ? data.data : [];
+  try {
+    const res = await axios.get(`${API_BASE}/feedbacktype`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
 };
 
 // Feedback modules by feedback type
 export const getFeedbackModules = async (feedbacktype_id) => {
-  const res = await fetch(createUrl(`/feedbackmoduletype/feedbacktype/${feedbacktype_id}`));
-  const data = await res.json();
-  return data.status === 'success' ? data.data : [];
-};
-
-// Faculties by role
-export const getFaculties = async (role) => {
-  const res = await fetch(createUrl(`/faculty/role/${role}`));
-  const data = await res.json();
-  return data.status === 'success' ? data.data : [];
-};
-
-// Batches by course
-export const getBatchesByCourse = async (course_id) => {
-  const res = await fetch(createUrl(`/batch/course/${course_id}`));
-  const data = await res.json();
-  return data.status === 'success' ? data.data : [];
+  if (!feedbacktype_id) return [];
+  try {
+    const res = await axios.get(`${API_BASE}/feedbackmoduletype/feedbacktype/${feedbacktype_id}`, { headers: { token: getToken() } });
+    return res.data;
+  } catch (err) {
+    return handleError(err);
+  }
 };

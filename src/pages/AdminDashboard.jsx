@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { fetchAllScheduleFeedbacks, deleteScheduleFeedback } from '../services/schedulefeedback';
 import { fetchAllStudents } from '../services/student';
@@ -21,7 +20,7 @@ export default function AdminDashboard() {
         getCourses()
       ]);
 
-      if (fbRes.status === 'error' || stRes.status === 'error' || faRes.status === 'error' || coRes.status === 'error') {
+      if ([fbRes, stRes, faRes, coRes].some(res => res.status === 'error')) {
         alert('Error fetching data');
         window.location.href = '/login';
         return;
@@ -40,13 +39,21 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, hasResponses) => {
+    if (hasResponses) {
+      alert('Cannot delete: feedback has responses.');
+      return;
+    }
     if (!window.confirm('Are you sure you want to delete this feedback?')) return;
+
     const res = await deleteScheduleFeedback(id);
     if (res.status === 'success') {
       setFeedbacks(feedbacks.filter(fb => fb.schedulefeedback_id !== id));
       alert('Deleted successfully');
-    } else alert(`Delete failed: ${res.error}`);
+    } else {
+      console.error(res.error);
+      alert(`Delete failed: ${res.error?.message || JSON.stringify(res.error)}`);
+    }
   };
 
   const handleLogout = () => {
@@ -68,21 +75,12 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ padding: '20px 20px 0 20px', fontFamily: 'Arial, sans-serif' }}>
-      
-      {/* Top Header: Admin Dashboard + Logout */}
+      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <h2 style={{ margin: 0, fontSize: '38px' }}>Admin Dashboard</h2>
         <button
           onClick={handleLogout}
-          style={{
-            backgroundColor: '#e74c3c',
-            color: '#fff',
-            border: 'none',
-            padding: '6px 15px',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
+          style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none', padding: '6px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
         >
           Logout
         </button>
@@ -104,10 +102,8 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Schedule Feedbacks Title */}
+      {/* Schedule Feedbacks Table */}
       <h3 style={{ marginBottom: '10px', fontSize: '30px' }}>Schedule Feedbacks</h3>
-
-      {/* Schedule Feedback Table */}
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
@@ -132,28 +128,22 @@ export default function AdminDashboard() {
               <td>
                 <button
                   onClick={() => window.location.href = `/admin/edit-schedule/${fb.schedulefeedback_id}`}
-                  style={{
-                    backgroundColor: '#3498db',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    marginRight: '5px'
-                  }}
+                  style={{ backgroundColor: '#3498db', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', marginRight: '5px' }}
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(fb.schedulefeedback_id)}
+                  onClick={() => handleDelete(fb.schedulefeedback_id, fb.responsesCount > 0)}
+                  disabled={fb.responsesCount > 0}
                   style={{
-                    backgroundColor: '#e74c3c',
+                    backgroundColor: fb.responsesCount > 0 ? '#95a5a6' : '#e74c3c',
                     color: '#fff',
                     border: 'none',
                     padding: '5px 10px',
                     borderRadius: '5px',
-                    cursor: 'pointer'
+                    cursor: fb.responsesCount > 0 ? 'not-allowed' : 'pointer'
                   }}
+                  title={fb.responsesCount > 0 ? 'Cannot delete: has responses' : 'Delete'}
                 >
                   Delete
                 </button>
@@ -162,7 +152,6 @@ export default function AdminDashboard() {
           ))}
         </tbody>
       </table>
-
     </div>
   );
 }

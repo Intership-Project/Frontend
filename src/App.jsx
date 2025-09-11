@@ -10,7 +10,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Student from './pages/Student';
 import Subject from './pages/Subject';
-
+import ScheduleForm from './pages/ScheduleForm';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Course from './pages/Course';
@@ -34,6 +34,7 @@ function App() {
               <Route path="students" element={<Student />} />
                  <Route path="batches" element={<Batch />} />
                  <Route path="subjects" element={<Subject/>} />
+                   <Route path="schedule" element={<ScheduleForm/>} />
 
           </Route>
         </Routes>

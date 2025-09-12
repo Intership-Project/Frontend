@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createUrl, createError } from "./utils";
+import { createUrl, createError } from "../utils";
 
 export async function register(name, email, password, roleId, courseId = null) {
     try {
@@ -35,7 +35,7 @@ export async function login(email, password, courseId = null) {
         }
 
         if (courseId) {
-            body.course_id = courseId; //match backend expectation
+            body.course_id = courseId; 
         }
 
 
@@ -48,3 +48,24 @@ export async function login(email, password, courseId = null) {
     }
 }
 
+
+
+
+// Change faculty password
+export async function changeFacultyPassword(oldPassword, newPassword) {
+    try {
+        const url = createUrl('faculty/changepassword')
+        const body = { oldPassword, newPassword }
+
+        // Include JWT token in headers
+        const token = sessionStorage.getItem('token') // must store JWT at login
+        const headers = {
+            token: token, // backend reads token from headers.token
+        }
+
+        const response = await axios.put(url, body, { headers })
+        return response.data
+    } catch (ex) {
+        return { status: 'error', error: ex.response?.data?.error || ex.message }
+    }
+}

@@ -42,7 +42,8 @@ export function Login() {
         const data = result.data
         sessionStorage['token'] = data.token
         sessionStorage['usertype'] = 'Faculty'
-         sessionStorage['rolename'] = data.rolename 
+        sessionStorage['rolename'] = data.rolename
+        sessionStorage['username'] = data.username
         toast.success('Faculty login successful')
         navigate('/Home')
       } else {

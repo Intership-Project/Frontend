@@ -5,10 +5,11 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import ViewStudentFeedback from './pages/ViewStudentFeedback'
 import AddFacultyFeedback from './pages/AddFacultyFeedback'
-import Profile from './pages/Profile'
+//import Profile from './pages/Profile'
 import ChangePassword from './pages/ChangePassword'
 import StudentFeedbackList from './pages/StudentFeedbackList'
 import FeedbackReports from './pages/FeedbackReports'
+
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
       <Route path='/Home' element={<Home />} />
       <Route path='/ViewStudentFeedback' element={<ViewStudentFeedback />} />
       <Route path='/AddFacultyFeedback' element={<AddFacultyFeedback />} />
-      <Route path='/Profile' element={<Profile/>} />
+      {/* <Route path='/Profile' element={<Profile/>} /> */}
       <Route path='/ChangePassword' element={<ChangePassword />} />
       <Route path='/StudentFeedbackList' element={<StudentFeedbackList />} />
       <Route path='/FeedbackReports' element={<FeedbackReports />} />

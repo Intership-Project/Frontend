@@ -1,21 +1,20 @@
-import { Link, useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export function Navbar() {
-  const navigate = useNavigate()
-  const [role, setRole] = useState("")
+  const navigate = useNavigate();
+  const [role, setRole] = useState("");
 
   useEffect(() => {
-    const rolename = sessionStorage.getItem("rolename")
-    if (rolename) {
-      setRole(rolename.toLowerCase()) 
-    }
-  }, [])
+    const rolename = sessionStorage.getItem("rolename");
+    console.log("Navbar role:", rolename);
+    if (rolename) setRole(rolename.toLowerCase());
+  }, []);
 
   const onLogout = () => {
-    sessionStorage.clear()
-    navigate("/")
-  }
+    sessionStorage.clear();
+    navigate("/");
+  };
 
   return (
     <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
@@ -31,7 +30,7 @@ export function Navbar() {
             {/* Trainer & Lab Mentor */}
             {(role === "trainer" || role === "lab mentor") && (
               <li className="nav-item">
-                <Link className="nav-link" to="/feedbackreports">FeedbackReports</Link>
+                <Link className="nav-link" to="/feedbackreports">Feedback Reports</Link>
               </li>
             )}
 
@@ -47,20 +46,20 @@ export function Navbar() {
               </>
             )}
 
-            {/* Common: Profile */}
-            <li className="nav-item">
+            {/* Profile - always visible */}
+            {/* <li className="nav-item">
               <Link className="nav-link" to="/profile">Profile</Link>
-            </li>
+            </li> */}
 
-            {/* Common: Change Password */}
+            {/* Change Password - always visible */}
             <li className="nav-item">
               <Link className="nav-link" to="/changepassword">Change Password</Link>
             </li>
 
-            {/* Logout */}
+            {/* Logout - always visible */}
             <li className="nav-item">
-              <button 
-                onClick={onLogout} 
+              <button
+                onClick={onLogout}
                 className="nav-link btn btn-link text-light"
               >
                 Logout
@@ -70,7 +69,7 @@ export function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

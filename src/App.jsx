@@ -1,11 +1,13 @@
 
 
 import { Route, Routes } from "react-router-dom";
+import AddFeedback from './pages/AddFeedback';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLayout from './pages/AdminLayout';
 import Batch from './pages/Batch';
 import Dashboard from './pages/Dashboard';
 import Faculty from './pages/Faculty';
+import FeedbackModuleType from './pages/FeedbackModuletype';
 import FeedbackQuestion from './pages/FeedbackQuestion';
 import FeedbackType from './pages/FeedbackType';
 import Login from './pages/Login';
@@ -38,7 +40,8 @@ function App() {
                  <Route path="subjects" element={<Subject/>} />
                  <Route path="questions" element={<FeedbackQuestion/>} />
                  <Route path="FeedbackTypes" element={<FeedbackType/>} />
-
+                 <Route path="add-feedback" element={<AddFeedback/>} />
+                 <Route path="FeedbackModuleTypes" element={<FeedbackModuleType/>} />
           </Route>
         </Routes>
 

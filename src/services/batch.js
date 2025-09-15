@@ -1,4 +1,3 @@
-// services/batch.js
 import axios from 'axios';
 import { createError, createUrl } from './utils';
 
@@ -56,6 +55,20 @@ export async function deleteBatch(id) {
     return res.data;
   } catch (err) {
     console.error(`DELETE /batch/${id} error:`, err.response || err.message);
+    return createError(err.response?.data?.error || err.message);
+  }
+}
+
+// GET batches by course ID
+export async function getBatchesByCourse(courseId) {
+  try {
+    // ✅ fixed route
+    const res = await axios.get(createUrl(`batch/course/${courseId}`), {
+      headers: { token: getToken() },
+    });
+    return res.data;
+  } catch (err) {
+    console.error(`GET /batch/course/${courseId} error:`, err.response || err.message);
     return createError(err.response?.data?.error || err.message);
   }
 }

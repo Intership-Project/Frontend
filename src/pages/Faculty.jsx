@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
-import { fetchAllFaculty, fetchAllCourses, addFaculty, updateFaculty, deleteFaculty } from '../services/facultylist';
+import { getCourses } from '../services/addfeedback'; // ✅ Correct import for courses
+import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
 
 // Role mappings
 const getRoleNameById = (id) => ({ 1:'Lab Mentor', 6:'Trainer', 7:'Course Coordinator' }[id] || 'Unknown');
@@ -38,8 +38,12 @@ export default function Faculty() {
   };
 
   const loadCourses = async () => {
-    const response = await fetchAllCourses();
-    if (response.status === 'success') setCourses(response.data);
+    try {
+      const response = await getCourses();
+      if (response.status === 'success') setCourses(response.data);
+    } catch (err) {
+      console.error('Failed to load courses', err);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -75,14 +79,14 @@ export default function Faculty() {
   const handleModalSave = async (e) => {
     e.preventDefault();
     const payload = {
-      facultyname: modalData.facultyname !== '' ? modalData.facultyname : null,
-      email: modalData.email !== '' ? modalData.email : null,
+      facultyname: modalData.facultyname || null,
+      email: modalData.email || null,
       role_id: modalData.role_id ? Number(modalData.role_id) : null,
       course_id: modalData.role_id === 7
-        ? (modalData.course_id !== '' ? Number(modalData.course_id) : null)
+        ? (modalData.course_id ? Number(modalData.course_id) : null)
         : null,
       password: modalType === 'add'
-        ? (modalData.password !== '' ? modalData.password : null)
+        ? (modalData.password || null)
         : undefined
     };
 

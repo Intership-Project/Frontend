@@ -16,6 +16,7 @@ import ScheduleForm from './pages/ScheduleForm';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Course from './pages/Course';
+import FilledFeedback from './pages/FilledFeedback';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
 
                  <Route path="questions" element={<FeedbackQuestion/>} />
                  <Route path="FeedbackTypes" element={<FeedbackType/>} />
+                 <Route path="feedback" element={<FilledFeedback/>} />
 
 
           </Route>

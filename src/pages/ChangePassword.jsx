@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Navbar from "../components/Navbar";
-import { changeFacultyPassword } from '../services/faculty';
+import { changeFacultyPassword } from '../services/facultylogin';
 import { toast } from 'react-toastify'
 import './ChangePassword.css'
 

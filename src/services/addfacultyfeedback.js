@@ -2,53 +2,12 @@ import axios from "axios";
 import { createUrl, createError } from "../utils";
 
 
-// Fetch dashboard stats for a course
-export async function fetchDashboardStats(courseId) {
-  try {
-    const token = sessionStorage.getItem("token");
-    const res = await axios.get(`/filledfeedback/stats/${courseId}`, { headers: { token } });
-    return res.data;
-  } catch (ex) {
-    return createError(ex.response?.data?.error || ex.message);
-  }
-}
-
-
-// Fetch recent feedbacks for a course
-export async function fetchRecentFeedbacks(courseId) {
-  try {
-    const token = sessionStorage.getItem("token");
-    const res = await axios.get(`/filledfeedback/recent/${courseId}`, { headers: { token } });
-    return res.data;
-  } catch (ex) {
-    return createError(ex.response?.data?.error || ex.message);
-  }
-}
-
-
-
-// Fetch all feedbacks for CC dashboard
-export async function getCCFeedbacks() {
-  try {
-    const token = sessionStorage.getItem("token");
-    const res = await axios.get(createUrl("coursecordinator/feedbacks"), {
-      headers: { token }  // this is what your middleware expects
-    });
-    if (res.data.status === "success") {
-      return res.data.data;
-    } else {
-      return createError(res.data.error || "Failed to fetch feedbacks");
-    }
-  } catch (err) {
-    return createError(err.message || "Server error");
-  }
-}
 
 
 // Fetch feedback details for a specific schedule
 export async function getCCFeedbackDetails(schedulefeedback_id) {
   try {
-    const token = sessionStorage.getItem("token"); // or localStorage
+    const token = sessionStorage.getItem("token"); 
     const res = await axios.get(
       createUrl(`coursecordinator/feedbacks/${schedulefeedback_id}`),
       { headers: { token } }
@@ -63,34 +22,6 @@ export async function getCCFeedbackDetails(schedulefeedback_id) {
     return createError(err.message || "Server error");
   }
 }
-
-
-
-// export async function downloadAnonymizedPDF(facultyId) {
-//   try {
-//     const token = sessionStorage.getItem("token");
-//     const res = await axios.get(
-//       createUrl(`faculty/download/faculty/${facultyId}`),
-//       { 
-//         responseType: "blob",
-//         headers: { Authorization: `Bearer ${token}` }
-//       }
-//     );
-
-//     // Generate file download
-//     const url = window.URL.createObjectURL(new Blob([res.data]));
-//     const link = document.createElement("a");
-//     link.href = url;
-//     link.setAttribute("download", `faculty-${facultyId}-feedback.pdf`);
-//     document.body.appendChild(link);
-//     link.click();
-//     link.remove();
-
-//     return { status: "success" };
-//   } catch (err) {
-//     return createError(err.message || "Download failed");
-//   }
-// }
 
 
 

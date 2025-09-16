@@ -57,10 +57,10 @@ export async function changeFacultyPassword(oldPassword, newPassword) {
         const url = createUrl('faculty/changepassword')
         const body = { oldPassword, newPassword }
 
-        // Include JWT token in headers
-        const token = sessionStorage.getItem('token') // must store JWT at login
+        
+        const token = sessionStorage.getItem('token')
         const headers = {
-            token: token, // backend reads token from headers.token
+            token: token, 
         }
 
         const response = await axios.put(url, body, { headers })

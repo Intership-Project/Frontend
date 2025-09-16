@@ -24,15 +24,8 @@ export function Navbar() {
 
             {/* Common: Home */}
             <li className="nav-item">
-              <Link className="nav-link" to="/home">Home</Link>
+              <Link className="nav-link" to="/homeCC">Home</Link>
             </li>
-
-            {/* Trainer & Lab Mentor */}
-            {(role === "trainer" || role === "lab mentor") && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/feedbackreports">Feedback Reports</Link>
-              </li>
-            )}
 
             {/* Course Coordinator */}
             {role === "course coordinator" && (

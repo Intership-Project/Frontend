@@ -9,7 +9,7 @@ import {
   fetchModuleTypes,
   fetchFacultyBatches,
   fetchMyCourse,
-} from "../services/feedback";
+} from "../services/addfacultyfeedback";
 import "./AddFacultyFeedback.css";
 
 function AddFacultyFeedback() {

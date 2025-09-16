@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { register as facultyRegister } from "../services/faculty"
+import { register as facultyRegister } from "../services/facultylogin"
 import { register as adminRegister } from "../services/admin"
 
 export function Register() {

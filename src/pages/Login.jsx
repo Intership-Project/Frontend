@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { login as facultyLogin } from '../services/faculty'
+import { login as facultyLogin } from '../services/facultylogin'
 import { login as adminLogin } from '../services/admin'
 
 

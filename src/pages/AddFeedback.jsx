@@ -102,7 +102,7 @@ export default function AddFeedback() {
 
   return (
     <div className="container" style={{ maxWidth: "800px", margin: "30px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "10px", background: "#f9f9f9" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Add Faculty Feedback (Admin)</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Add Faculty Feedback</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
           {/* Course */}

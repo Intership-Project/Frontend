@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { getCourses } from '../services/addfeedback'; // ✅ Correct import for courses
+
+import { useEffect, useState } from 'react';
+import { getCourses } from '../services/addfeedback';
 import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
+
 
 // Role mappings
 const getRoleNameById = (id) => ({ 1:'Lab Mentor', 6:'Trainer', 7:'Course Coordinator' }[id] || 'Unknown');

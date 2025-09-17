@@ -20,7 +20,7 @@ export const fetchAllFaculty = async () => {
   }
 };
 
-// ✅ Alias for AddFeedback
+// Alias for AddFeedback
 export const getFaculties = fetchAllFaculty;
 
 // Fetch faculties by course

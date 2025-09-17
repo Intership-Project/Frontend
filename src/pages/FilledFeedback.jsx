@@ -1,177 +1,168 @@
-// import { useEffect, useState } from 'react';
-// import { fetchAllFilledFeedback, downloadAllFeedbacksPDF } from '../services/fillfeedback';
-
-// export default function FilledFeedback() {
-//   const [feedbackList, setFeedbackList] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     loadFeedback();
-//   }, []);
-
-//   const loadFeedback = async () => {
-//     const response = await fetchAllFilledFeedback();
-//     if (response.status === 'success') {
-//       setFeedbackList(response.data);
-//     } else {
-//       alert(response.error?.message || JSON.stringify(response.error));
-//     }
-//     setLoading(false);
-//   };
-
-//   if (loading) return <p>Loading filled feedback...</p>;
-
-//   // Group feedbacks by schedulefeedback_id and coursename
-//   const groupedFeedback = feedbackList.reduce((acc, f) => {
-//     if (!acc[f.schedulefeedback_id]) {
-//       acc[f.schedulefeedback_id] = { courses: {} };
-//     }
-//     if (!acc[f.schedulefeedback_id].courses[f.coursename]) {
-//       acc[f.schedulefeedback_id].courses[f.coursename] = [];
-//     }
-//     acc[f.schedulefeedback_id].courses[f.coursename].push(f);
-//     return acc;
-//   }, {});
-
-//   return (
-//     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-//       <h1>Grouped Filled Feedbacks</h1>
-
-//       {Object.entries(groupedFeedback).map(([scheduleId, scheduleData]) => (
-//         <div key={scheduleId} style={{ marginBottom: '40px', border: '1px solid #ddd', padding: '15px', borderRadius: '8px' }}>
-//           <h2>ScheduleFeedback ID: {scheduleId}</h2>
-
-//           <button
-//             onClick={() => downloadAllFeedbacksPDF(scheduleId)}
-//             style={{
-//               backgroundColor: '#2980b9',
-//               color: '#fff',
-//               padding: '8px 16px',
-//               borderRadius: '5px',
-//               border: 'none',
-//               cursor: 'pointer',
-//               marginBottom: '20px'
-//             }}
-//           >
-//             Download Combined PDF for Schedule {scheduleId}
-//           </button>
-
-//           {Object.entries(scheduleData.courses).map(([courseName, feedbacks]) => (
-//             <div key={courseName} style={{ marginBottom: '20px' }}>
-//               <h3 style={{ color: '#34495e' }}>Course: {courseName}</h3>
-
-//               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-//                 <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
-//                   <tr>
-//                     <th style={{ padding: '8px' }}>Student</th>
-//                     <th style={{ padding: '8px' }}>Comment</th>
-//                     <th style={{ padding: '8px' }}>Rating</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {feedbacks.map(f => (
-//                     <tr key={f.filledfeedbacks_id} style={{ borderBottom: '1px solid #ddd' }}>
-//                       <td style={{ padding: '8px' }}>{f.studentname}</td>
-//                       <td style={{ padding: '8px' }}>{f.comments || '-'}</td>
-//                       <td style={{ padding: '8px' }}>{f.rating}</td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </table>
-//             </div>
-//           ))}
-//         </div>
-//       ))}
-
-//       {Object.keys(groupedFeedback).length === 0 && (
-//         <p>No filled feedbacks found.</p>
-//       )}
-//     </div>
-//   );
-// }
-
 import React, { useEffect, useState } from 'react';
-import { fetchAllFilledFeedback, downloadAllFeedbacksPDF } from '../services/fillfeedback';
+import axios from 'axios';
 
-const FeedbackList = () => {
-  const [feedbackList, setFeedbackList] = useState([]);
+export default function FilledFeedback() {
+  const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedData, setExpandedData] = useState({});
+  const [expandedFeedback, setExpandedFeedback] = useState(null);
+  const [loadingExpanded, setLoadingExpanded] = useState(null);
+
+  // Load all feedbacks grouped by schedule
+  const loadFeedbacks = async () => {
+    try {
+      const res = await axios.get('http://localhost:4000/filledfeedback/grouped-by-schedule', {
+        headers: { token: sessionStorage.getItem('token') }
+      });
+      if (res.data.status === 'success') {
+        setFeedbacks(res.data.data);
+      } else {
+        alert(res.data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to load feedbacks');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch expanded feedback (questions + answers)
+  const fetchFeedbackDetails = async (filledfeedbacks_id) => {
+    if (expandedFeedback === filledfeedbacks_id) {
+      setExpandedFeedback(null);
+      return;
+    }
+
+    setLoadingExpanded(filledfeedbacks_id);
+    try {
+      const res = await axios.get(`http://localhost:4000/filledfeedback/${filledfeedbacks_id}`, {
+        headers: { token: sessionStorage.getItem('token') }
+      });
+      if (res.data.status === 'success') {
+        setExpandedData(prev => ({
+          ...prev,
+          [filledfeedbacks_id]: res.data.data
+        }));
+        setExpandedFeedback(filledfeedbacks_id);
+      } else {
+        alert(res.data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to load feedback details');
+    } finally {
+      setLoadingExpanded(null);
+    }
+  };
+
+  // Download PDF
+  const handleDownload = async (schedulefeedback_id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/filledfeedback/download/schedule/${schedulefeedback_id}`,
+        { responseType: 'blob', headers: { token: sessionStorage.getItem('token') } }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `schedule-${schedulefeedback_id}-responses.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to download PDF');
+    }
+  };
 
   useEffect(() => {
-    const loadFeedback = async () => {
-      const response = await fetchAllFilledFeedback();
-      console.log('API Response:', response);  // Debugging
-
-      if (response.status === 'success') {
-        setFeedbackList(response.data);
-      } else {
-        alert(response.error?.message || 'Failed to load feedbacks');
-      }
-      setLoading(false);
-    };
-
-    loadFeedback();
+    loadFeedbacks();
   }, []);
 
   if (loading) return <p>Loading feedbacks...</p>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center' }}>All Filled Feedbacks</h2>
-      {feedbackList.length === 0 ? (
-        <p style={{ textAlign: 'center' }}>No feedbacks available.</p>
-      ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f0f0f0' }}>
-              <th>ID</th>
-              <th>Schedule ID</th>
-              <th>Course</th>
-              <th>Student</th>
-              <th>Subject</th>
-              <th>Faculty</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Comments</th>
-              <th>Rating</th>
-              <th>Download PDF</th>
-            </tr>
-          </thead>
-          <tbody>
-            {feedbackList.map(fb => (
-              <tr key={fb.filledfeedbacks_id} style={{ borderBottom: '1px solid #ddd' }}>
-                <td>{fb.filledfeedbacks_id}</td>
-                <td>{fb.schedulefeedback_id}</td>
-                <td>{fb.coursename}</td>
-                <td>{fb.studentname}</td>
-                <td>{fb.subjectname}</td>
-                <td>{fb.facultyname}</td>
-                <td>{fb.StartDate}</td>
-                <td>{fb.EndDate}</td>
-                <td>{fb.comments || '-'}</td>
-                <td>{fb.rating}</td>
-                <td>
-                  <button
-                    onClick={() => downloadAllFeedbacksPDF(fb.schedulefeedback_id)}
-                    style={{
-                      backgroundColor: '#27ae60',
-                      color: '#fff',
-                      padding: '5px 10px',
-                      border: 'none',
-                      borderRadius: '5px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Download PDF
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+      <h1>Filled Feedbacks</h1>
+      {feedbacks.map(({ schedule, feedbacks }) => (
+        <div key={schedule.schedulefeedback_id} style={{ marginBottom: '40px' }}>
+          <h2>{schedule.coursename} - {schedule.subjectname} ({schedule.facultyname})</h2>
+          <button
+            onClick={() => handleDownload(schedule.schedulefeedback_id)}
+            style={{
+              padding: '8px 15px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              marginBottom: '10px'
+            }}
+          >
+            Download All Responses PDF
+          </button>
+
+          {feedbacks.length === 0 ? (
+            <p>No feedbacks yet.</p>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
+              <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
+                <tr>
+                  <th style={{ padding: '10px' }}>Student Name</th>
+                  <th>Comments</th>
+                  <th>Rating</th>
+                  <th>View</th>
+                </tr>
+              </thead>
+              <tbody>
+                {feedbacks.map(fb => (
+                  <React.Fragment key={fb.filledfeedbacks_id}>
+                    <tr style={{ borderBottom: '1px solid #ddd' }}>
+                      <td style={{ padding: '10px' }}>{fb.studentname}</td>
+                      <td>{fb.comments}</td>
+                      <td>{fb.rating ?? '-'}</td>
+                      <td>
+                        <button
+                          onClick={() => fetchFeedbackDetails(fb.filledfeedbacks_id)}
+                          style={{
+                            padding: '5px 10px',
+                            backgroundColor: '#27ae60',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '3px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {expandedFeedback === fb.filledfeedbacks_id ? 'Hide' : 'View'}
+                        </button>
+                      </td>
+                    </tr>
+
+                    {expandedFeedback === fb.filledfeedbacks_id && (
+                      <tr>
+                        <td colSpan={4} style={{ backgroundColor: '#ecf0f1', padding: '10px' }}>
+                          {loadingExpanded === fb.filledfeedbacks_id ? (
+                            <p>Loading questions and answers...</p>
+                          ) : (
+                            expandedData[fb.filledfeedbacks_id]?.responses.map((r, idx) => (
+                              <div key={idx} style={{ marginBottom: '8px' }}>
+                                <strong>Q{idx + 1}:</strong> {r.question} <br />
+                                <strong>Answer:</strong> {r.response_rating}
+                              </div>
+                            ))
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      ))}
     </div>
   );
-};
-
-export default FeedbackList;
+}

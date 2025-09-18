@@ -1,42 +1,36 @@
 import { Route, Routes } from "react-router-dom"
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import Register from './pages/Register'
 import Login from './pages/Login'
 import HomeCC from './pages/HomeCC'
 import ViewStudentFeedback from './pages/ViewStudentFeedback'
 import AddFacultyFeedback from './pages/AddFacultyFeedback'
-//import Profile from './pages/Profile'
 import ChangePassword from './pages/ChangePassword'
 import StudentFeedbackList from './pages/StudentFeedbackList'
-
-
-
+import HomeFaculty from './pages/HomeFaculty'
 
 function App() {
-
   return (
-  <div className='container-fluid'>
-    <Routes>
-      <Route index element={<Login />} />
-      <Route path='/Login' element={<Login />} />
-      <Route path='/Register' element={<Register />} />
-      <Route path='/Home' element={<HomeCC />} />
-      <Route path='/homecc' element={<HomeCC />} />
-      <Route path='/ViewStudentFeedback' element={<ViewStudentFeedback />} />
-      <Route path='/AddFacultyFeedback' element={<AddFacultyFeedback />} />
-      {/* <Route path='/Profile' element={<Profile/>} /> */}
-      <Route path='/ChangePassword' element={<ChangePassword />} />
-      <Route path='/StudentFeedbackList' element={<StudentFeedbackList />} />
-      
-      
-      
-      
-    </Routes>
+    <div className='container-fluid'>
+      <Routes>
+        <Route index element={<Login />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
 
-    <ToastContainer />
+        {/* CC ka dashboard */}
+        <Route path='/homecc' element={<HomeCC />} />
 
-  </div>
+        {/* Faculty/Lab Mentor/Trainer ka dashboard */}
+        <Route path='/homefaculty' element={<HomeFaculty />} />
 
+        <Route path='/viewstudentfeedback' element={<ViewStudentFeedback />} />
+        <Route path='/addfacultyfeedback' element={<AddFacultyFeedback />} />
+        <Route path='/changepassword' element={<ChangePassword />} />
+        <Route path='/studentfeedbacklist' element={<StudentFeedbackList />} />
+      </Routes>
+
+      <ToastContainer />
+    </div>
   )
 }
 

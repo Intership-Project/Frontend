@@ -7,7 +7,6 @@ export function Navbar() {
 
   useEffect(() => {
     const rolename = sessionStorage.getItem("rolename");
-    console.log("Navbar role:", rolename);
     if (rolename) setRole(rolename.toLowerCase());
   }, []);
 
@@ -19,15 +18,23 @@ export function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
       <div className="container-fluid">
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <div className="collapse navbar-collapse">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
-            {/* Common: Home */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/homeCC">Home</Link>
-            </li>
+            {/* Role-based Home */}
+            {role === "course coordinator" && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/homecc">Home</Link>
+              </li>
+            )}
 
-            {/* Course Coordinator */}
+            {(role === "trainer" || role === "lab mentor") && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/homefaculty">Home</Link>
+              </li>
+            )}
+
+            {/* Only for Course Coordinator */}
             {role === "course coordinator" && (
               <>
                 <li className="nav-item">
@@ -39,17 +46,12 @@ export function Navbar() {
               </>
             )}
 
-            {/* Profile - always visible */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to="/profile">Profile</Link>
-            </li> */}
-
             {/* Change Password - always visible */}
             <li className="nav-item">
               <Link className="nav-link" to="/changepassword">Change Password</Link>
             </li>
 
-            {/* Logout - always visible */}
+            {/* Logout */}
             <li className="nav-item">
               <button
                 onClick={onLogout}

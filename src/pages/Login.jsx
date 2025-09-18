@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import { login as facultyLogin } from '../services/facultylogin'
 import { login as adminLogin } from '../services/admin'
 
-
 export function Login() {
   const [userType, setUserType] = useState('faculty') // faculty or admin
   const [email, setEmail] = useState('')
@@ -45,7 +44,15 @@ export function Login() {
         sessionStorage['rolename'] = data.rolename
         sessionStorage['username'] = data.username
         toast.success('Faculty login successful')
-        navigate('/Home')
+
+        //  Role-based redirect
+        if (data.rolename === 'Course Coordinator') {
+          navigate('/homecc')
+        } else if (data.rolename === 'Trainer' || data.rolename === 'Lab Mentor') {
+          navigate('/homefaculty')
+        } else {
+          navigate('/home') 
+        }
       } else {
         const err = result?.error || ''
         if (err.toLowerCase().includes('course selection required')) {
@@ -153,54 +160,4 @@ export function Login() {
   )
 }
 
-
 export default Login
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

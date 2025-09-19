@@ -97,6 +97,7 @@ export const addFeedback = async ({ courseId, batchId, subjectId, facultyId, fee
   }
 };
 
+
 // Get all feedbacks
 export const getFeedbackList = async () => {
   try {
@@ -118,3 +119,4 @@ export const deleteFeedback = async (id) => {
     return { status: "error", error: err.response?.data?.error || err.message };
   }
 };
+

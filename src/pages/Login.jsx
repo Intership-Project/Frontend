@@ -1,83 +1,71 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { login as facultyLogin } from '../services/facultylogin'
-import { login as adminLogin } from '../services/admin'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { login as facultyLogin } from '../services/facultylogin';
+import { login as adminLogin } from '../services/admin';
 
 export function Login() {
-  const [userType, setUserType] = useState('faculty') // faculty or admin
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [courseId, setCourseId] = useState('')
-  const [showCourseSelect, setShowCourseSelect] = useState(false)
+  const [userType, setUserType] = useState('faculty'); // faculty or admin
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [courseId, setCourseId] = useState('');
+  const [showCourseSelect, setShowCourseSelect] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onLogin = async () => {
     if (!email.trim()) {
-      toast.warn('Enter email')
-      return
+      toast.warn('Enter email');
+      return;
     }
     if (!password.trim()) {
-      toast.warn('Enter password')
-      return
+      toast.warn('Enter password');
+      return;
     }
 
-    let result
+    let result;
 
     if (userType === 'faculty') {
-      // Handle faculty login
-      if (showCourseSelect) {
-        if (!courseId) {
-          toast.warn('Select course')
-          return
-        }
-        result = await facultyLogin(email, password, courseId)
-      } else {
-        result = await facultyLogin(email, password)
+      if (showCourseSelect && !courseId) {
+        toast.warn('Select course');
+        return;
       }
+      result = await facultyLogin(email, password, showCourseSelect ? courseId : null);
 
       if (result?.status === 'success') {
-        const data = result.data
-        sessionStorage['token'] = data.token
-        sessionStorage['usertype'] = 'Faculty'
-        sessionStorage['rolename'] = data.rolename
-        sessionStorage['username'] = data.username
-        toast.success('Faculty login successful')
+        const data = result.data;
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('usertype', 'Faculty');
+        sessionStorage.setItem('rolename', data.rolename);
+        sessionStorage.setItem('username', data.username);
+        toast.success('Faculty login successful');
 
-        //  Role-based redirect
-        if (data.rolename === 'Course Coordinator') {
-          navigate('/homecc')
-        } else if (data.rolename === 'Trainer' || data.rolename === 'Lab Mentor') {
-          navigate('/homefaculty')
-        } else {
-          navigate('/home') 
-        }
+        if (data.rolename === 'Course Coordinator') navigate('/homecc');
+        else if (data.rolename === 'Trainer' || data.rolename === 'Lab Mentor') navigate('/homefaculty');
+        else navigate('/home');
       } else {
-        const err = result?.error || ''
+        const err = result?.error || '';
         if (err.toLowerCase().includes('course selection required')) {
-          setShowCourseSelect(true)
-          toast.info('Please select a course to continue')
+          setShowCourseSelect(true);
+          toast.info('Please select a course to continue');
         } else {
-          toast.error(err || 'Something went wrong')
+          toast.error(err || 'Something went wrong');
         }
       }
     } else if (userType === 'admin') {
-      // Handle admin login
-      result = await adminLogin(email, password)
-
+      result = await adminLogin(email, password);
       if (result?.status === 'success') {
-        const data = result.data
-        sessionStorage['token'] = data.token
-        sessionStorage['usertype'] = 'Admin'
-        sessionStorage['adminId'] = data.adminId
-        toast.success('Admin login successful')
-        navigate('/admin/Home')
+        const data = result.data;
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('usertype', 'Admin');
+        sessionStorage.setItem('adminId', data.adminId);
+        toast.success('Admin login successful');
+        navigate('/admin/Home');
       } else {
-        toast.error(result?.error || 'Invalid email or password')
+        toast.error(result?.error || 'Invalid email or password');
       }
     }
-  }
+  };
 
   return (
     <>
@@ -93,8 +81,8 @@ export function Login() {
               <select
                 value={userType}
                 onChange={(e) => {
-                  setUserType(e.target.value)
-                  setShowCourseSelect(false) // reset when switching type
+                  setUserType(e.target.value);
+                  setShowCourseSelect(false);
                 }}
                 className="form-control"
               >
@@ -106,26 +94,26 @@ export function Login() {
             <div className="mb-3">
               <label>Email</label>
               <input
-                onChange={(e) => setEmail(e.target.value)}
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="abc@test.com"
                 className="form-control"
-                value={email}
               />
             </div>
 
             <div className="mb-3">
               <label>Password</label>
               <input
-                onChange={(e) => setPassword(e.target.value)}
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="********"
                 className="form-control"
-                value={password}
               />
             </div>
 
-            {/* Faculty only: Show course dropdown when required */}
+            {/* Faculty only: Course selection */}
             {userType === 'faculty' && showCourseSelect && (
               <div className="mb-3">
                 <label>Select Course</label>
@@ -143,10 +131,16 @@ export function Login() {
               </div>
             )}
 
+            {/* Forgot Password */}
+            <div className="mb-2">
+              <Link to={`/forgotpassword/${userType}`} style={{ fontSize: '14px' }}>
+                Forgot Password?
+              </Link>
+            </div>
+
             <div className="mb-3">
               <div>
-                Don&apos;t have an account?{' '}
-                <Link to="/register">Register here</Link>
+                Don&apos;t have an account? <Link to="/register">Register here</Link>
               </div>
               <button onClick={onLogin} className="btn btn-primary mt-2">
                 Login
@@ -157,7 +151,7 @@ export function Login() {
         <div className="col"></div>
       </div>
     </>
-  )
+  );
 }
 
-export default Login
+export default Login;

@@ -8,6 +8,9 @@ import AddFacultyFeedback from './pages/AddFacultyFeedback'
 import ChangePassword from './pages/ChangePassword'
 import StudentFeedbackList from './pages/StudentFeedbackList'
 import HomeFaculty from './pages/HomeFaculty'
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 
 function App() {
   return (
@@ -16,6 +19,8 @@ function App() {
         <Route index element={<Login />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path="/forgotpassword/:userType" element={<ForgotPassword />} />
+        <Route path="/resetpassword/:userType/:resetToken" element={<ResetPassword />} />
 
         {/* CC ka dashboard */}
         <Route path='/homecc' element={<HomeCC />} />
@@ -27,6 +32,7 @@ function App() {
         <Route path='/addfacultyfeedback' element={<AddFacultyFeedback />} />
         <Route path='/changepassword' element={<ChangePassword />} />
         <Route path='/studentfeedbacklist' element={<StudentFeedbackList />} />
+        
       </Routes>
 
       <ToastContainer />

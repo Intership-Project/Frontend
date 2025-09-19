@@ -23,6 +23,24 @@ export async function register(name, email, password, roleId, courseId = null) {
 }
 
 
+
+export async function fetchCourses() {
+  try {
+    const url = createUrl("course/courses");
+    const response = await axios.get(url);
+    return response.data;
+  } catch (ex) {
+    return { status: "error", error: ex.message };
+  }
+}
+
+
+
+
+
+
+
+
 // LOGIN Faculty
 export async function login(email, password, courseId = null) {
     try {
@@ -69,3 +87,6 @@ export async function changeFacultyPassword(oldPassword, newPassword) {
         return { status: 'error', error: ex.response?.data?.error || ex.message }
     }
 }
+
+
+

@@ -1,27 +1,27 @@
 import axios from "axios";
-import { createUrl, createError } from "../utils";
+import { createUrl, createError } from "../utilss";
 
 
 
 
-// Fetch feedback details for a specific schedule
-export async function getCCFeedbackDetails(schedulefeedback_id) {
-  try {
-    const token = sessionStorage.getItem("token"); 
-    const res = await axios.get(
-      createUrl(`coursecordinator/feedbacks/${schedulefeedback_id}`),
-      { headers: { token } }
-    );
+// // Fetch feedback details for a specific schedule
+// export async function getCCFeedbackDetails(schedulefeedback_id) {
+//   try {
+//     const token = sessionStorage.getItem("token"); 
+//     const res = await axios.get(
+//       createUrl(`coursecordinator/feedbacks/${schedulefeedback_id}`),
+//       { headers: { token } }
+//     );
 
-    if (res.data.status === "success") {
-      return res.data.data;
-    } else {
-      return createError(res.data.error || "Failed to fetch details");
-    }
-  } catch (err) {
-    return createError(err.message || "Server error");
-  }
-}
+//     if (res.data.status === "success") {
+//       return res.data.data;
+//     } else {
+//       return createError(res.data.error || "Failed to fetch details");
+//     }
+//   } catch (err) {
+//     return createError(err.message || "Server error");
+//   }
+// }
 
 
 
@@ -36,6 +36,23 @@ export async function fetchMyCourse() {
     return { status: "error", error: err.message || "Server error" };
   }
 }
+
+
+
+// Fetch faculties 
+export async function fetchFaculties() {
+  try {
+    const token = sessionStorage.getItem("token");
+
+    const res = await axios.get(createUrl("faculty/trainers-labs"), { headers: { token } });
+
+    if (res.data.status === "success") return { status: "success", data: res.data.data };
+    return { status: "error", error: res.data.error || "Failed to fetch faculties" };
+  } catch (err) {
+    return { status: "error", error: err.message || "Server error" };
+  }
+}
+
 
 
 
@@ -57,19 +74,6 @@ export async function fetchFacultyBatches(facultyId) {
 }
 
 
-// Fetch faculties 
-export async function fetchFaculties() {
-  try {
-    const token = sessionStorage.getItem("token");
-
-    const res = await axios.get(createUrl("faculty/trainers-labs"), { headers: { token } });
-
-    if (res.data.status === "success") return { status: "success", data: res.data.data };
-    return { status: "error", error: res.data.error || "Failed to fetch faculties" };
-  } catch (err) {
-    return { status: "error", error: err.message || "Server error" };
-  }
-}
 
 
 

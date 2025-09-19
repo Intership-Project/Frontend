@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createUrl, createError } from "../utils";
+import { createUrl, createError } from "../utilss";
 
 export async function register(name, email, password, roleId, courseId = null) {
     try {

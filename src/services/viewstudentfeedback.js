@@ -1,70 +1,47 @@
 import axios from "axios";
-import { createUrl, createError } from "../utils";
+import { createError, createUrl } from "../utilss";
 
-const getToken = () => sessionStorage.getItem("token");
+// Helper to get token from session
+function getToken() {
+  const token = sessionStorage.getItem("token");
+  if (!token) throw new Error("Auth token not found. Please login.");
+  return token;
+}
 
-
-
-
-// Fetch all filled feedbacks (for faculty/CC view)
-export async function fetchFacultyFilledFeedback() {
+// Fetch all feedbacks for CC's course
+export async function fetchCourseFeedbacks(courseId) {
   try {
-    const res = await axios.get(createUrl("coursecordinator/feedbacks"), {
+    const res = await axios.get(createUrl(`filledfeedback/course/${courseId}/grouped`), {
       headers: { token: getToken() },
     });
-    if (res.data.status === "success") return { status: "success", data: res.data.data };
-    return createError(res.data.error || "Failed to fetch feedbacks");
+    return res.data; 
+
   } catch (err) {
+    console.error("fetchCourseFeedbacks error:", err);
     return createError(err.response?.data?.error || err.message);
   }
 }
 
-// Fetch feedback details for a specific schedulefeedback_id
-export async function getFacultyFeedbackDetails(schedulefeedback_id) {
-  try {
-    const res = await axios.get(createUrl(`coursecordinator/feedbacks/${schedulefeedback_id}`), {
-      headers: { token: getToken() },
-    });
-    if (res.data.status === "success") return { status: "success", data: res.data.data };
-    return createError(res.data.error || "Failed to fetch feedback details");
-  } catch (err) {
-    return createError(err.response?.data?.error || err.message);
-  }
-}
-
-// Download a single filled feedback PDF by filledfeedbacks_id
-export async function downloadSingleFeedbackPDF(filledfeedbacks_id) {
+//  Download PDF of all responses for a schedule
+export async function downloadStudentResponsesPDF(schedulefeedback_id) {
   try {
     const res = await axios.get(
-    createUrl(`coursecordinator/download/${filledfeedbacks_id}`), 
-    {
-      headers: { token: getToken() },
-      responseType: "blob",
-    });
+      createUrl(`filledfeedback/download/schedule/${schedulefeedback_id}`),
+      {
+        headers: { token: getToken() },
+        responseType: "blob",
+      }
+    );
 
     const url = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `filledfeedback-${filledfeedbacks_id}.pdf`);
+    link.setAttribute("download", `schedule-${schedulefeedback_id}-responses.pdf`);
     document.body.appendChild(link);
     link.click();
     link.remove();
-
-    return { status: "success" };
   } catch (err) {
-    return createError(err.response?.data?.error || err.message || "Failed to download PDF");
-  }
-}
-
-// Fetch course assigned to logged-in CC
-export async function fetchMyCourse() {
-  try {
-    const res = await axios.get(createUrl("coursecordinator/my-course"), {
-      headers: { token: getToken() },
-    });
-    if (res.data.status === "success") return { status: "success", data: res.data.data };
-    return { status: "error", error: res.data.error || "Failed to fetch course" };
-  } catch (err) {
-    return { status: "error", error: err.message || "Server error" };
+    console.error("downloadStudentResponsesPDF error:", err);
+    alert("Failed to download PDF");
   }
 }

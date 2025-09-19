@@ -1,84 +1,57 @@
-.cc-feedback-container {
-  margin: 20px auto;
+.feedback-container {
   padding: 20px;
-  width: 95%;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  font-family: Arial, sans-serif;
+  font-family: Arial;
 }
 
-.cc-feedback-container h1 {
-  font-size: 22px;
-  color: #2c3e50;
-  margin-bottom: 20px;
+.feedback-card {
+  margin-bottom: 40px;
 }
 
-/* Table styling */
-.cc-feedback-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
+.feedback-heading {
+  margin-bottom: 10px;
 }
 
-.cc-feedback-table th,
-.cc-feedback-table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  text-align: center;
-}
-
-.cc-feedback-table th {
-  background: #f0f0f0;
-  font-weight: bold;
-  color: #333;
-}
-
-.cc-feedback-table tr:nth-child(even) {
-  background: #fafafa;
-}
-
-.cc-feedback-table tr:hover {
-  background: #f1f7ff;
-}
-
-/* Buttons */
-.cc-feedback-button {
-  margin: 0 5px;
-  padding: 6px 12px;
+.download-btn {
+  padding: 8px 15px;
+  background-color: #3498db;
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 13px;
-  background: #007bff;
-  color: white;
-  transition: 0.3s;
+  margin-bottom: 10px;
 }
 
-.cc-feedback-button:hover {
-  background: #0056b3;
+.feedback-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
 }
 
-/* Optional: Status labels if needed */
-.status {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+.feedback-table th {
+  padding: 10px;
+  background-color: #2c3e50;
+  color: #fff;
 }
 
-.status-reviewed {
-  background: #eafaf1;
-  color: #27ae60;
-  border: 1px solid #27ae60;
+.feedback-table td {
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
 }
 
-.status-pending {
-  background: #fff5e6;
-  color: #e67e22;
-  border: 1px solid #e67e22;
+.view-btn {
+  padding: 5px 10px;
+  background-color: #27ae60;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.expanded-row {
+  background-color: #ecf0f1;
+  padding: 10px;
+}
+
+.response-item {
+  margin-bottom: 8px;
 }

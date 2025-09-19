@@ -1,68 +1,77 @@
-import axios from 'axios';
-import { createError, createUrl } from './utils';
+import axios from "axios";
+import { createError, createUrl } from "./utils";
 
-function getToken() {
-  const token = sessionStorage.getItem('token');
-  if (!token) throw new Error('Auth token not found. Please login.');
-  return token;
-}
+const getToken = () => sessionStorage.getItem("token");
 
-// GET all feedback module types
-export async function getFeedbackModuleTypes() {
+// ✅ Get all module types for a given feedback type
+export const getFeedbackModuleTypesByType = async (feedbackTypeId) => {
   try {
-    const res = await axios.get(createUrl('feedbackmoduletype'), {
+    const res = await axios.get(
+      createUrl(`feedbackmoduletype/by-feedbacktype/${feedbackTypeId}`),
+      { headers: { token: getToken() } }
+    );
+    return res.data.status === "success"
+      ? { status: "success", data: res.data.data }
+      : { status: "error", error: res.data.error };
+  } catch (err) {
+    return createError(err);
+  }
+};
+
+// ✅ Create new feedback module type
+export const createFeedbackModuleType = async (payload) => {
+  try {
+    const res = await axios.post(createUrl("feedbackmoduletype"), payload, {
       headers: { token: getToken() },
     });
-    return res.data;
+    return res.data.status === "success"
+      ? { status: "success", data: res.data.data }
+      : { status: "error", error: res.data.error };
   } catch (err) {
-    return createError(err.response?.data?.error || err.message);
+    return createError(err);
   }
-}
+};
 
-// CREATE new feedback module type
-export async function createFeedbackModuleType(data) {
+// ✅ Get all feedback module types (optional list view)
+export const getFeedbackModuleTypes = async () => {
   try {
-    const res = await axios.post(createUrl('feedbackmoduletype'), data, {
+    const res = await axios.get(createUrl("feedbackmoduletype"), {
       headers: { token: getToken() },
     });
-    return res.data;
+    return res.data.status === "success"
+      ? { status: "success", data: res.data.data }
+      : { status: "error", error: res.data.error };
   } catch (err) {
-    return createError(err.response?.data?.error || err.message);
+    return createError(err);
   }
-}
+};
 
-// DELETE feedback module type
-export async function deleteFeedbackModuleType(id) {
+// ✅ Update feedback module type
+export const updateFeedbackModuleType = async (id, payload) => {
+  try {
+    const res = await axios.put(
+      createUrl(`feedbackmoduletype/${id}`),
+      payload,
+      { headers: { token: getToken() } }
+    );
+    return res.data.status === "success"
+      ? { status: "success", data: res.data.data }
+      : { status: "error", error: res.data.error };
+  } catch (err) {
+    return createError(err);
+  }
+};
+
+// ✅ Delete feedback module type
+export const deleteFeedbackModuleType = async (id) => {
   try {
     const res = await axios.delete(createUrl(`feedbackmoduletype/${id}`), {
       headers: { token: getToken() },
     });
-    return res.data;
+    return res.data.status === "success"
+      ? { status: "success", data: res.data.data }
+      : { status: "error", error: res.data.error };
   } catch (err) {
-    return createError(err.response?.data?.error || err.message);
+    return createError(err);
   }
-}
-
-// GET module types by feedback type (frontend filtering)
-export async function getFeedbackModuleTypesByType(feedbacktype_id) {
-  try {
-    // ✅ Fetch all feedback module types
-    const res = await axios.get(createUrl("feedbackmoduletype"), {
-      headers: { token: getToken() },
-    });
-
-    if (res.data.status !== "success") {
-      return createError(res.data.error || "Failed to fetch module types");
-    }
-
-    // ✅ Filter by feedbacktype_id on frontend
-    const filtered = res.data.data.filter(
-      (m) => m.feedbacktype_id === parseInt(feedbacktype_id)
-    );
-
-    return { status: "success", data: filtered };
-  } catch (err) {
-    return createError(err.response?.data?.error || err.message);
-  }
-}
-
+};

@@ -1,6 +1,9 @@
 
+// import { useEffect, useState } from 'react';
+// import { getCourses } from '../services/addfeedback';
+// import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
 import { useEffect, useState } from 'react';
-import { getCourses } from '../services/addfeedback';
+import { getCourses } from '../services/course';
 import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
 
 

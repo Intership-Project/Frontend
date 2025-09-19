@@ -88,7 +88,9 @@ export const addFeedback = async ({ courseId, batchId, subjectId, facultyId, fee
     formData.append("date", date);
     if (pdfFile) formData.append("pdf_file", pdfFile);
 
+
     const res = await axios.post(createUrl("addfeedback"), formData, {
+
       headers: { token: getToken(), "Content-Type": "multipart/form-data" },
     });
     return res.data;

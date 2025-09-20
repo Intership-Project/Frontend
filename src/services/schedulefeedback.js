@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { createError, createUrl } from './utils';
 
@@ -46,15 +45,16 @@ export async function updateFeedbackStatus(id, status) {
   }
 }
 
-
-// Update Schedule Feedback
-export const updateScheduleFeedback = async (id, payload) => {
+// New: Update schedule feedback (for Edit)
+export async function updateScheduleFeedback(id, data) {
   try {
-    const res = await axios.put(`${API_BASE}/schedulefeedback/${id}`, payload, {
+    const res = await axios.put(createUrl(`schedulefeedback/${id}`), data, {
       headers: { token: getToken() }
     });
-    return res.data; // { status: 'success', data: updatedRecord }
-  } catch (err) {
-    return handleError(err);
+    return res.data;
+  } catch (error) {
+    console.error('API update error:', error.response || error.message);
+    return createError(error.response?.data?.error || error.message);
   }
-};
+}
+

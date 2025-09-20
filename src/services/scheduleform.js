@@ -73,6 +73,7 @@ export const getFeedbackModules = async (feedbacktype_id) => {
 };
 
 
+
 // Update Schedule Feedback
 export const updateScheduleFeedback = async (id, payload) => {
   try {
@@ -84,4 +85,5 @@ export const updateScheduleFeedback = async (id, payload) => {
     return handleError(err);
   }
 };
+
 

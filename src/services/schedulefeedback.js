@@ -57,4 +57,3 @@ export async function updateScheduleFeedback(id, data) {
     return createError(error.response?.data?.error || error.message);
   }
 }
-

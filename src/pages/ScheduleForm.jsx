@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-  getCourses,
-  getSubjectsByCourse,
-  getFeedbackTypes,
-  getFeedbackModules,
-  getFaculties,
   getBatchesByCourse,
+  getCourses,
+  getFaculties,
+  getFeedbackModules,
+  getFeedbackTypes,
+  getSubjectsByCourse,
 } from "../services/scheduleform";
 
 const ScheduleForm = () => {
@@ -15,8 +15,8 @@ const ScheduleForm = () => {
   const [feedbackTypes, setFeedbackTypes] = useState([]);
   const [feedbackModules, setFeedbackModules] = useState([]);
   const [roles] = useState([
-    { id: 6, name: "Trainer" },
-    { id: 1, name: "Lab Mentor" },
+    { id: 2, name: "Trainer" },
+    { id: 3, name: "Lab Mentor" },
   ]);
   const [faculties, setFaculties] = useState([]);
   const [batches, setBatches] = useState([]);
@@ -67,7 +67,7 @@ const ScheduleForm = () => {
 
   // Load Batches by course (only for Lab Mentor)
   useEffect(() => {
-    if (!form.course_id || form.role_id !== "1") return setBatches([]);
+    if (!form.course_id || form.role_id !== "3") return setBatches([]);
     getBatchesByCourse(form.course_id).then(
       (res) => res.status === "success" && setBatches(res.data)
     );
@@ -234,7 +234,7 @@ const ScheduleForm = () => {
           name="batch_id"
           value={form.batch_id}
           onChange={handleChange}
-          disabled={form.role_id !== "1"}
+          disabled={form.role_id !== "3"}
           style={styles.select}
         >
           <option value="">Select Batch</option>

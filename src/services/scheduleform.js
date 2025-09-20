@@ -71,3 +71,16 @@ export const getFeedbackModules = async (feedbacktype_id) => {
     return handleError(err);
   }
 };
+
+// Update Schedule Feedback
+export const updateScheduleFeedback = async (id, payload) => {
+  try {
+    const res = await axios.put(`${API_BASE}/schedulefeedback/${id}`, payload, {
+      headers: { token: getToken() }
+    });
+    return res.data; // { status: 'success', data: updatedRecord }
+  } catch (err) {
+    return handleError(err);
+  }
+};
+

@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { getCourses } from '../services/addfeedback'; // ✅ Correct import for courses
+import { getCourses } from '../services/addfeedback'; //  Correct import for courses
 import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
 
 

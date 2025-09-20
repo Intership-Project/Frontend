@@ -95,7 +95,7 @@ export default function AddFeedback() {
     try {
       const formData = new FormData();
       formData.append("course_id", courseId);
-      if (batchId) formData.append("batch_id", batchId);
+     // if (batchId) formData.append("batch_id", batchId);
       formData.append("subject_id", subjectId);
       formData.append("faculty_id", facultyId);
       formData.append("feedbackmoduletype_id", moduleTypeId);
@@ -165,13 +165,13 @@ export default function AddFeedback() {
                 {courses.map(c => <option key={c.course_id} value={c.course_id}>{c.coursename}</option>)}
               </select>
             </div>
-            <div>
+            {/* { <div>
               <label>Batch</label>
               <select value={batchId} onChange={e => setBatchId(e.target.value)}>
                 <option value="">-- Select Batch --</option>
                 {batches.map(b => <option key={b.batch_id} value={b.batch_id}>{b.batchname}</option>)}
               </select>
-            </div>
+            </div> } */}
             <div>
               <label>Subject</label>
               <select value={subjectId} onChange={e => setSubjectId(e.target.value)}>
@@ -223,7 +223,7 @@ export default function AddFeedback() {
           <thead>
             <tr>
               <th>Course</th>
-              <th>Batch</th>
+             
               <th>Subject</th>
               <th>Faculty</th>
               <th>Type</th>
@@ -242,13 +242,25 @@ export default function AddFeedback() {
             {feedbackList.map(f => (
               <tr key={f.addfeedback_id}>
                 <td>{f.coursename}</td>
-                <td>{f.batchname || "-"}</td>
+               
                 <td>{f.subjectname}</td>
                 <td>{f.facultyname}</td>
                 <td>{f.fbtypename}</td>
                 <td>{f.fbmoduletypename}</td>
                 <td>{f.date}</td>
-                <td>{f.pdf_file ? <a href={createUrl(`uploads/${f.pdf_file}`)} target="_blank" rel="noreferrer">View</a> : "-"}</td>
+   <td>
+  {f.pdf_file ? (
+    <a
+      href={createUrl(`feedback_reports/${f.pdf_file}`)}
+      target="_blank"
+      rel="noreferrer"
+    >
+      View
+    </a>
+  ) : (
+    "-"
+  )}
+</td>
                 <td>
                   <button className="btn btn-primary btn-sm" onClick={() => handleEdit(f)} style={{ marginRight: "5px" }}>Edit</button>
                   <button className="btn btn-danger btn-sm" onClick={() => handleDelete(f.addfeedback_id)}>Delete</button>

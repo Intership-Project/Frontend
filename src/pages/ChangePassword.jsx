@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import Navbar from "../components/Navbar";
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 import { changeFacultyPassword } from '../services/facultylogin';
 import { toast } from 'react-toastify'
 import './ChangePassword.css'
@@ -34,7 +35,7 @@ function ChangePassword() {
 
   return (
     <>
-      <Navbar />
+      <FacultySidebar />
       <div className="change-password-container">
         <h2 className="page-header">Change Password</h2>
         <div className="row mb-3">

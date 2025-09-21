@@ -1,4 +1,5 @@
-import Navbar from "../components/Navbar"
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 
 export function Profile() {
     return (

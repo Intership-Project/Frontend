@@ -1,10 +1,11 @@
-import Navbar from "../components/Navbar"
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 
 export function StudentFeedbackList() {
     return (
         <>
         
-        <Navbar/>
+        <FacultySidebar />
 
                 <div className="container">
                 <h1 className='title'>StudentFeedbackList</h1>

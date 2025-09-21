@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+//import Navbar from "../components/Navbar";
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 import {
   fetchCourseFeedbacks,
   downloadStudentResponsesPDF,
@@ -62,7 +64,7 @@ export default function ViewStudentFeedback() {
 
   return (
     <>
-      <Navbar />
+      <FacultySidebar  />
       <div className="feedback-container">
         <h1>📄 Filled Feedbacks</h1>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 import { toast } from "react-toastify";
 import {
   addFacultyFeedback,
@@ -155,7 +156,7 @@ function AddFacultyFeedback() {
 
   return (
     <>
-      <Navbar />
+      <FacultySidebar />
       <div className="container">
         <h2>Add Faculty Feedback</h2>
         <form onSubmit={onSubmit}>

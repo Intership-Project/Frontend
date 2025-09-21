@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 import { fetchAssignedFiles } from "../services/facultyDashboard";
 import "./HomeFaculty.css";
 
@@ -22,7 +23,7 @@ function HomeFaculty() {
 
   return (
     <>
-      <Navbar />
+      <FacultySidebar/>
       <div className="home-container">
         <h2>Welcome, {username}</h2>
 

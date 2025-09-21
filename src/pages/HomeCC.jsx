@@ -7,7 +7,8 @@ import {
   updateFeedbackStatus,   
 } from "../services/cchome";
 import "./HomeCC.css";
-import Navbar from "../components/Navbar";
+import FacultySidebar from "../components/FacultySidebar";
+import "../components/FacultySidebar.css"; 
 import { jwtDecode } from "jwt-decode";
 
 
@@ -96,7 +97,7 @@ function HomeCC() {
 
   return (
     <>
-      <Navbar />
+      <FacultySidebar />
       <div className="home-container">
         <h2>Welcome, {ccName}</h2>
         <h3>Course: {course?.coursename || "N/A"}</h3>

@@ -123,7 +123,7 @@ function HomeCC() {
 
         {/* Recent Feedbacks */}
         <section className="feedback-section">
-          <h4>📝 Recent Student Feedback</h4>
+          <h4>📝 Recent Student Feedbacks</h4>
 
           {recentFeedbacks.length === 0 ? (
             <p>No feedbacks found.</p>

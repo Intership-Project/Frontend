@@ -1,9 +1,21 @@
-
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { fetchAllScheduleFeedbacks, deleteScheduleFeedback, updateFeedbackStatus } from '../services/schedulefeedback';
-import { fetchAllStudents } from '../services/student';
-import { fetchAllFaculty } from '../services/facultylist';
 import { getCourses } from '../services/course';
+import { fetchAllFaculty } from '../services/facultylist';
+import {
+  deleteScheduleFeedback,
+  fetchAllScheduleFeedbacks,
+  updateFeedbackStatus,
+  updateScheduleFeedback
+} from '../services/schedulefeedback';
+import { fetchAllStudents } from '../services/student';
+import { createUrl } from '../services/utils';
+
+function getToken() {
+  const token = sessionStorage.getItem('token');
+  if (!token) throw new Error('Auth token not found. Please login.');
+  return token;
+}
 
 export default function AdminDashboard() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -11,6 +23,20 @@ export default function AdminDashboard() {
   const [faculty, setFaculty] = useState([]);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // edit modal state
+  const [showModal, setShowModal] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState({
+    course_id: '',
+    subject_id: '',
+    faculty_id: '',
+    batch_id: '',
+    feedbacktype_id: '',
+    feedbackmoduletype_id: '',
+    StartDate: '',
+    EndDate: ''
+  });
 
   const loadData = async () => {
     try {
@@ -27,7 +53,10 @@ export default function AdminDashboard() {
         return;
       }
 
-      const updatedFb = fbRes.data.map(fb => ({ ...fb, status: fb.status || 'inactive' }));
+      const updatedFb = fbRes.data.map(fb => ({
+        ...fb,
+        status: fb.status || 'inactive'
+      }));
       setFeedbacks(updatedFb);
       setStudents(stRes.data);
       setFaculty(faRes.data);
@@ -41,6 +70,61 @@ export default function AdminDashboard() {
     }
   };
 
+  // -------------------- EDIT FLOW --------------------
+
+  const handleEdit = async (id) => {
+    try {
+      const res = await axios.get(createUrl(`schedulefeedback/${id}`), {
+        headers: { token: getToken() }
+      });
+
+      if (res.data.status === "success" && res.data.data) {
+        const fb = res.data.data;
+
+        setFormData({
+          schedulefeedback_id: fb.schedulefeedback_id,
+          course_id: fb.course_id,
+          subject_id: fb.subject_id,
+          faculty_id: fb.faculty_id,
+          batch_id: fb.batch_id || "",
+          feedbacktype_id: fb.feedbacktype_id,
+          feedbackmoduletype_id: fb.feedbackmoduletype_id,
+          StartDate: fb.StartDate ? fb.StartDate.split("T")[0] : "",
+          EndDate: fb.EndDate ? fb.EndDate.split("T")[0] : "",
+        });
+
+        setEditingId(id);
+        setShowModal(true);
+      } else {
+        alert("Feedback not found!");
+      }
+    } catch (err) {
+      console.error("Edit load error:", err);
+      alert("Error fetching feedback details");
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await updateScheduleFeedback(editingId, formData);
+
+      if (res.status === "success") {
+        setFeedbacks(feedbacks.map(fb =>
+          fb.schedulefeedback_id === editingId ? { ...fb, ...formData } : fb
+        ));
+        setShowModal(false);
+        setEditingId(null);
+        alert("Feedback updated successfully!");
+      } else {
+        alert("Update failed: " + res.error);
+      }
+    } catch (err) {
+      console.error("Update error:", err);
+      alert("Error saving feedback");
+    }
+  };
+
+  // -------------------- DELETE --------------------
   const handleDelete = async (id, hasResponses) => {
     if (hasResponses) {
       alert('Cannot delete: feedback has responses.');
@@ -58,6 +142,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // -------------------- TOGGLE STATUS --------------------
   const handleToggleStatus = async (id) => {
     const feedback = feedbacks.find(fb => fb.schedulefeedback_id === id);
     if (!feedback) return;
@@ -93,7 +178,7 @@ export default function AdminDashboard() {
   if (loading) return <p>Loading dashboard...</p>;
 
   return (
-    <div style={{ padding: '20px 20px 0 20px', fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <h2 style={{ margin: 0, fontSize: '38px' }}>Admin Dashboard</h2>
         <button
@@ -112,21 +197,23 @@ export default function AdminDashboard() {
         </button>
       </div>
 
+      {/* Stats */}
       <div style={{ display: 'flex', gap: '20px', marginBottom: '25px' }}>
         <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1, textAlign:'center' }}>
-          <h4 style={{ margin: '0 0 5px 0' }}>Total Students</h4>
-          <p style={{ fontSize:'20px', fontWeight:'bold', margin:0 }}>{students.length}</p>
+          <h4>Total Students</h4>
+          <p style={{ fontSize:'20px', fontWeight:'bold' }}>{students.length}</p>
         </div>
         <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1, textAlign:'center' }}>
-          <h4 style={{ margin: '0 0 5px 0' }}>Total Faculty</h4>
-          <p style={{ fontSize:'20px', fontWeight:'bold', margin:0 }}>{faculty.length}</p>
+          <h4>Total Faculty</h4>
+          <p style={{ fontSize:'20px', fontWeight:'bold' }}>{faculty.length}</p>
         </div>
         <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1, textAlign:'center' }}>
-          <h4 style={{ margin: '0 0 5px 0' }}>Total Courses</h4>
-          <p style={{ fontSize:'20px', fontWeight:'bold', margin:0 }}>{courses.length}</p>
+          <h4>Total Courses</h4>
+          <p style={{ fontSize:'20px', fontWeight:'bold' }}>{courses.length}</p>
         </div>
       </div>
 
+      {/* Feedback Table */}
       <h3 style={{ marginBottom: '10px', fontSize: '30px' }}>Schedule Feedbacks</h3>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
@@ -152,9 +239,8 @@ export default function AdminDashboard() {
               <td>{new Date(fb.EndDate).toLocaleDateString()}</td>
               <td>{fb.status}</td>
               <td>
-                {/* Edit Button */}
                 <button
-                  onClick={() => window.location.href = `/admin/edit-schedule/${fb.schedulefeedback_id}`}
+                  onClick={() => handleEdit(fb.schedulefeedback_id)}
                   style={{
                     backgroundColor: '#3498db',
                     color: '#fff',
@@ -168,8 +254,6 @@ export default function AdminDashboard() {
                 >
                   Edit
                 </button>
-
-                {/* Delete Button */}
                 <button
                   onClick={() => handleDelete(fb.schedulefeedback_id, fb.responsesCount > 0)}
                   disabled={fb.responsesCount > 0}
@@ -187,8 +271,6 @@ export default function AdminDashboard() {
                 >
                   Delete
                 </button>
-
-                {/* Toggle Status Button */}
                 <button
                   onClick={() => handleToggleStatus(fb.schedulefeedback_id)}
                   style={{
@@ -208,7 +290,79 @@ export default function AdminDashboard() {
           ))}
         </tbody>
       </table>
+
+      {/* Edit Modal */}
+      {showModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.5)', display: 'flex',
+          justifyContent: 'center', alignItems: 'center'
+        }}>
+          <div style={{
+            background: '#fff', padding: '20px', borderRadius: '8px',
+            width: '400px', maxHeight: '90vh', overflowY: 'auto'
+          }}>
+            <h3>Edit Feedback</h3>
+            <label>Course ID</label>
+            <input
+              type="text"
+              value={formData.course_id}
+              onChange={e => setFormData({ ...formData, course_id: e.target.value })}
+            />
+            <label>Subject ID</label>
+            <input
+              type="text"
+              value={formData.subject_id}
+              onChange={e => setFormData({ ...formData, subject_id: e.target.value })}
+            />
+            <label>Faculty ID</label>
+            <input
+              type="text"
+              value={formData.faculty_id}
+              onChange={e => setFormData({ ...formData, faculty_id: e.target.value })}
+            />
+            <label>Batch ID</label>
+            <input
+              type="text"
+              value={formData.batch_id}
+              onChange={e => setFormData({ ...formData, batch_id: e.target.value })}
+            />
+            <label>Feedback Type ID</label>
+            <input
+              type="text"
+              value={formData.feedbacktype_id}
+              onChange={e => setFormData({ ...formData, feedbacktype_id: e.target.value })}
+            />
+            <label>Feedback Module Type ID</label>
+            <input
+              type="text"
+              value={formData.feedbackmoduletype_id}
+              onChange={e => setFormData({ ...formData, feedbackmoduletype_id: e.target.value })}
+            />
+            <label>Start Date</label>
+            <input
+              type="date"
+              value={formData.StartDate}
+              onChange={e => setFormData({ ...formData, StartDate: e.target.value })}
+            />
+            <label>End Date</label>
+            <input
+              type="date"
+              value={formData.EndDate}
+              onChange={e => setFormData({ ...formData, EndDate: e.target.value })}
+            />
+            <div style={{ marginTop: '15px' }}>
+              <button onClick={handleSave} style={{ background:'#2ecc71', color:'#fff', padding:'6px 12px', border:'none', borderRadius:'5px', marginRight:'10px' }}>
+                Save
+              </button>
+              <button onClick={() => setShowModal(false)} style={{ background:'#e74c3c', color:'#fff', padding:'6px 12px', border:'none', borderRadius:'5px' }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
-
 }

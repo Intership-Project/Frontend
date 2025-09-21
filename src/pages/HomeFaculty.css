@@ -1,0 +1,47 @@
+.home-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Make welcome message bigger and add more space below */
+.home-container h2 {
+  color: #2c3e50;
+  font-size: 2.5rem;   /* Increased size */
+  margin-bottom: 40px; /* More space below */
+}
+
+.pdf-section {
+  margin-top: 30px;
+}
+
+.pdf-section h4 {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 15px;
+}
+
+.pdf-section p {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.pdf-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.pdf-section li {
+  margin: 8px 0;
+}
+
+.pdf-section a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.pdf-section a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}

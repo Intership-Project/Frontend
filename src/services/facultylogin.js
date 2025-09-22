@@ -1,6 +1,8 @@
 import axios from "axios";
 import { createUrl, createError } from "../utilss";
 
+
+
 export async function register(name, email, password, roleId, courseId = null) {
     try {
         const url = createUrl('faculty/register')
@@ -37,10 +39,6 @@ export async function fetchCourses() {
 
 
 
-
-
-
-
 // LOGIN Faculty
 export async function login(email, password, courseId = null) {
     try {
@@ -65,8 +63,6 @@ export async function login(email, password, courseId = null) {
         return { status: 'error', error: ex.message }
     }
 }
-
-
 
 
 // Change faculty password

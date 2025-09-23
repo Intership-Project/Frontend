@@ -1,5 +1,5 @@
 .sidebar {
-  width: 260px; /* increased from 220px */
+  width: 240px; /* increased from 220px */
   height: 100vh;
   background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
   color: white;

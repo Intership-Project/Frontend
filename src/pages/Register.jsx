@@ -94,14 +94,14 @@ export function Register() {
                 onChange={(e) => setRoleId(e.target.value)}
               >
                 <option value="">-- Select Role --</option>
-                <option value="1">Trainer</option>
-                <option value="2">Lab Mentor</option>
-                <option value="3">Course Coordinator</option>
+                <option value="6">Trainer</option>
+                <option value="1">Lab Mentor</option>
+                <option value="7">Course Coordinator</option>
               </select>
             </div>
 
             {/* Course - only visible for CC */}
-            {roleId === "3" && (
+            {roleId === "7" && (
               <div className="mb-3">
                 <label>Course</label>
                 <select

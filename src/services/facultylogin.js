@@ -13,7 +13,7 @@ export async function register(name, email, password, roleId, courseId = null) {
             role_id: roleId,
         }
 
-        if (roleId == 3 && courseId) {
+        if (roleId == 7 && courseId) {
             body.course_id = courseId
         }
         const response = await axios.post(url, body)

@@ -48,7 +48,7 @@ export function Login() {
         sessionStorage.setItem('usertype', 'Admin');
         sessionStorage.setItem('adminId', data.adminId);
         toast.success('Admin login successful');
-        navigate('/admin/Home');
+        navigate('/admin/dashboard');
       } else {
         toast.error(result?.error || 'Invalid email or password');
       }

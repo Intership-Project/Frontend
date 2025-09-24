@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createError, createUrl } from './utils';
+import { createError, createUrl } from '../utils';
 
 function getToken() {
   const token = sessionStorage.getItem('token');
@@ -62,7 +62,7 @@ export async function deleteBatch(id) {
 // GET batches by course ID
 export async function getBatchesByCourse(courseId) {
   try {
-    // ✅ fixed route
+    //  fixed route
     const res = await axios.get(createUrl(`batch/course/${courseId}`), {
       headers: { token: getToken() },
     });

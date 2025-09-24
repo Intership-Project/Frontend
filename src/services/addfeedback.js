@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createError, createUrl } from "./utils";
+import { createError, createUrl } from "../utils";
 
 const getToken = () => sessionStorage.getItem("token");
 

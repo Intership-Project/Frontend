@@ -1,9 +1,9 @@
 import axios from "axios";
-import { createError, createUrl } from "./utils";
+import { createError, createUrl } from "../utils";
 
 const getToken = () => sessionStorage.getItem("token");
 
-// ✅ Get all module types for a given feedback type
+//  Get all module types for a given feedback type
 export const getFeedbackModuleTypesByType = async (feedbackTypeId) => {
   try {
     const res = await axios.get(
@@ -18,7 +18,7 @@ export const getFeedbackModuleTypesByType = async (feedbackTypeId) => {
   }
 };
 
-// ✅ Create new feedback module type
+//  Create new feedback module type
 export const createFeedbackModuleType = async (payload) => {
   try {
     const res = await axios.post(createUrl("feedbackmoduletype"), payload, {
@@ -32,7 +32,7 @@ export const createFeedbackModuleType = async (payload) => {
   }
 };
 
-// ✅ Get all feedback module types (optional list view)
+//  Get all feedback module types (optional list view)
 export const getFeedbackModuleTypes = async () => {
   try {
     const res = await axios.get(createUrl("feedbackmoduletype"), {
@@ -46,7 +46,7 @@ export const getFeedbackModuleTypes = async () => {
   }
 };
 
-// ✅ Update feedback module type
+//  Update feedback module type
 export const updateFeedbackModuleType = async (id, payload) => {
   try {
     const res = await axios.put(
@@ -62,7 +62,7 @@ export const updateFeedbackModuleType = async (id, payload) => {
   }
 };
 
-// ✅ Delete feedback module type
+//  Delete feedback module type
 export const deleteFeedbackModuleType = async (id) => {
   try {
     const res = await axios.delete(createUrl(`feedbackmoduletype/${id}`), {

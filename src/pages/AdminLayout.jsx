@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
@@ -20,7 +19,7 @@ export default function AdminLayout() {
 
         <nav style={{ flexGrow: 1 }}>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {/** Dashboard */}
+            {/* Dashboard */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/dashboard"
@@ -30,7 +29,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Courses */}
+            {/* Courses */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/courses"
@@ -40,7 +39,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Faculty */}
+            {/* Faculty */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/faculty"
@@ -50,7 +49,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Batches */}
+            {/* Batches */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/batches"
@@ -60,7 +59,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Students */}
+            {/* Students */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/students"
@@ -70,7 +69,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Subjects */}
+            {/* Subjects */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/subjects"
@@ -80,7 +79,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Schedule Feedback */}
+            {/* Schedule Feedback */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/schedule"
@@ -90,7 +89,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Feedback Response */}
+            {/* Feedback Response */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/feedback"
@@ -100,7 +99,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Add Feedback */}
+            {/* Add Feedback */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/add-feedback"
@@ -110,7 +109,7 @@ export default function AdminLayout() {
               </Link>
             </li>
 
-            {/** Questions */}
+            {/* Questions */}
             <li style={{ marginBottom: '20px', fontSize: '20px' }}>
               <Link
                 to="/admin/questions"
@@ -125,7 +124,7 @@ export default function AdminLayout() {
 
       {/* Main content */}
       <main style={{ flexGrow: 1, padding: '30px', background: '#f4f6f8' }}>
-        <Outlet /> {/* Nested routes render here */}
+        <Outlet /> {/* Nested route content goes here */}
       </main>
     </div>
   );

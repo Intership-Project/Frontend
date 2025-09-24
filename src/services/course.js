@@ -1,6 +1,6 @@
 // services/course.js
 import axios from 'axios';
-import { createError, createUrl } from './utils';
+import { createError, createUrl } from '../utils';
 
 function getToken() {
   const token = sessionStorage.getItem('token');

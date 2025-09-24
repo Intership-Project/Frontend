@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createError, createUrl } from "../utilss";
+import { createError, createUrl } from "../utils";
 
 // Helper to get token from session
 function getToken() {

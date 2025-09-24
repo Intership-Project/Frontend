@@ -11,10 +11,10 @@ import {
   getModuleTypesByFeedbackType,
   getSubjectsByCourse,
 } from "../services/addfeedback";
-import { createUrl } from "../services/utils";
+import { createUrl } from "../utils";
 
 export default function AddFeedback() {
-  const [feedbackId, setFeedbackId] = useState(null); // for edit
+  const [feedbackId, setFeedbackId] = useState(null); 
   const [courseId, setCourseId] = useState("");
   const [batchId, setBatchId] = useState("");
   const [subjectId, setSubjectId] = useState("");
@@ -32,7 +32,6 @@ export default function AddFeedback() {
   const [moduleTypes, setModuleTypes] = useState([]);
   const [feedbackList, setFeedbackList] = useState([]);
 
-  // Load initial data
   useEffect(() => {
     async function loadData() {
       try {
@@ -54,27 +53,35 @@ export default function AddFeedback() {
     loadData();
   }, []);
 
-  // Load subjects & batches when course changes
   useEffect(() => {
     async function loadCourseDetails() {
       if (!courseId) {
         setSubjects([]); setBatches([]); setSubjectId(""); setBatchId("");
         return;
       }
-      const subjectsRes = await getSubjectsByCourse(courseId);
-      if (subjectsRes.status === "success") setSubjects(subjectsRes.data); else setSubjects([]);
-      const batchesRes = await getBatchesByCourse(courseId);
-      if (batchesRes.status === "success") setBatches(batchesRes.data); else setBatches([]);
+      try {
+        const subjectsRes = await getSubjectsByCourse(courseId);
+        setSubjects(subjectsRes.status === "success" ? subjectsRes.data : []);
+        const batchesRes = await getBatchesByCourse(courseId);
+        setBatches(batchesRes.status === "success" ? batchesRes.data : []);
+      } catch {
+        setSubjects([]); setBatches([]);
+      }
     }
     loadCourseDetails();
   }, [courseId]);
 
-  // Load module types when feedback type changes
   useEffect(() => {
     async function loadModuleTypes() {
-      if (!feedbackTypeId) { setModuleTypes([]); setModuleTypeId(""); return; }
-      const res = await getModuleTypesByFeedbackType(feedbackTypeId);
-      if (res.status === "success") setModuleTypes(res.data); else setModuleTypes([]);
+      if (!feedbackTypeId) {
+        setModuleTypes([]); setModuleTypeId(""); return;
+      }
+      try {
+        const res = await getModuleTypesByFeedbackType(feedbackTypeId);
+        setModuleTypes(res.status === "success" ? res.data : []);
+      } catch {
+        setModuleTypes([]);
+      }
     }
     loadModuleTypes();
   }, [feedbackTypeId]);
@@ -87,6 +94,7 @@ export default function AddFeedback() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!courseId || !subjectId || !facultyId || !feedbackTypeId || !moduleTypeId || !date || (!pdfFile && !feedbackId)) {
       toast.warn("Please fill all required fields and select PDF");
       return;
@@ -95,7 +103,7 @@ export default function AddFeedback() {
     try {
       const formData = new FormData();
       formData.append("course_id", courseId);
-     // if (batchId) formData.append("batch_id", batchId);
+      if (batchId) formData.append("batch_id", batchId); 
       formData.append("subject_id", subjectId);
       formData.append("faculty_id", facultyId);
       formData.append("feedbackmoduletype_id", moduleTypeId);
@@ -129,13 +137,13 @@ export default function AddFeedback() {
 
   const handleEdit = (f) => {
     setFeedbackId(f.addfeedback_id);
-    setCourseId(f.course_id);
-    setBatchId(f.batch_id || "");
-    setSubjectId(f.subject_id);
-    setFacultyId(f.faculty_id);
-    setFeedbackTypeId(f.feedbacktype_id);
-    setModuleTypeId(f.feedbackmoduletype_id);
-    setDate(f.date);
+    setCourseId(f.course_id || "");
+    setBatchId(f.batch_id || ""); // keep empty string if no batch
+    setSubjectId(f.subject_id || "");
+    setFacultyId(f.faculty_id || "");
+    setFeedbackTypeId(f.feedbacktype_id || "");
+    setModuleTypeId(f.feedbackmoduletype_id || "");
+    setDate(f.date || "");
     setPdfFile(null);
   };
 
@@ -151,8 +159,7 @@ export default function AddFeedback() {
   };
 
   return (
-
-    <div className="container" style={{ maxWidth: "900px", margin: "30px auto" }}>
+    <div className="container" style={{ maxWidth: "1200px", margin: "30px auto" }}>
       {/* Form */}
       <div style={{ padding: "20px", border: "1px solid #ddd", borderRadius: "10px", background: "#f9f9f9", marginBottom: "30px" }}>
         <h2 style={{ textAlign: "center", marginBottom: "20px" }}>{feedbackId ? "Edit Feedback" : "Add Faculty Feedback"}</h2>
@@ -165,13 +172,13 @@ export default function AddFeedback() {
                 {courses.map(c => <option key={c.course_id} value={c.course_id}>{c.coursename}</option>)}
               </select>
             </div>
-            {/* { <div>
+            <div>
               <label>Batch</label>
               <select value={batchId} onChange={e => setBatchId(e.target.value)}>
                 <option value="">-- Select Batch --</option>
                 {batches.map(b => <option key={b.batch_id} value={b.batch_id}>{b.batchname}</option>)}
               </select>
-            </div> } */}
+            </div>
             <div>
               <label>Subject</label>
               <select value={subjectId} onChange={e => setSubjectId(e.target.value)}>
@@ -223,7 +230,7 @@ export default function AddFeedback() {
           <thead>
             <tr>
               <th>Course</th>
-             
+              <th>Batch</th>
               <th>Subject</th>
               <th>Faculty</th>
               <th>Type</th>
@@ -242,25 +249,13 @@ export default function AddFeedback() {
             {feedbackList.map(f => (
               <tr key={f.addfeedback_id}>
                 <td>{f.coursename}</td>
-               
+                <td>{f.batchname || "-"}</td>
                 <td>{f.subjectname}</td>
                 <td>{f.facultyname}</td>
                 <td>{f.fbtypename}</td>
                 <td>{f.fbmoduletypename}</td>
                 <td>{f.date}</td>
-   <td>
-  {f.pdf_file ? (
-    <a
-      href={createUrl(`feedback_reports/${f.pdf_file}`)}
-      target="_blank"
-      rel="noreferrer"
-    >
-      View
-    </a>
-  ) : (
-    "-"
-  )}
-</td>
+                <td>{f.pdf_file ? <a href={createUrl(`feedback_reports/${f.pdf_file}`)} target="_blank" rel="noreferrer">View</a> : "-"}</td>
                 <td>
                   <button className="btn btn-primary btn-sm" onClick={() => handleEdit(f)} style={{ marginRight: "5px" }}>Edit</button>
                   <button className="btn btn-danger btn-sm" onClick={() => handleDelete(f.addfeedback_id)}>Delete</button>

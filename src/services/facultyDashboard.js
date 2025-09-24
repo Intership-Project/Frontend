@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createUrl, createError } from "../utilss";
+import { createUrl, createError } from "../utils";
 
 // Fetch files assigned to logged-in faculty
 export async function fetchAssignedFiles() {

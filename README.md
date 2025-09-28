@@ -11,7 +11,7 @@ faculty, and admins interact with the system through this interface.
 ## ▶️ Setup & Run Locally
 1. Clone the repo:
 ```bash
-git clone https://github.com/your-org/frontend.git
+git clone https://github.com/Intership-Project/Frontend
 
 ```
 

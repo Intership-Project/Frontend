@@ -149,17 +149,21 @@ export default function Faculty() {
         <thead style={{ backgroundColor:'#2c3e50', color:'#fff' }}>
           <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
         </thead>
-        <tbody>
-          {facultyList.map(f => (
-            <tr key={f.faculty_id} style={{ borderBottom:'1px solid #ddd' }}>
-              <td>{f.faculty_id}</td><td>{f.facultyname}</td><td>{f.email}</td><td>{f.rolename}</td>
-              <td>
-                <button onClick={()=>openEditModal(f)} style={{ marginRight:'5px', backgroundColor:'#3498db', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Edit</button>
-                <button onClick={()=>handleDelete(f.faculty_id)} style={{ backgroundColor:'#e74c3c', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+       <tbody>
+  {facultyList.map((f, index) => (
+    <tr key={f.faculty_id} style={{ borderBottom:'1px solid #ddd' }}>
+      <td>{index + 1}</td> {/* S.No */}
+      <td>{f.facultyname}</td>
+      <td>{f.email}</td>
+      <td>{f.rolename}</td>
+      <td>
+        <button onClick={()=>openEditModal(f)} style={{ marginRight:'5px', backgroundColor:'#3498db', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Edit</button>
+        <button onClick={()=>handleDelete(f.faculty_id)} style={{ backgroundColor:'#e74c3c', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Delete</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
 
       {showModal && (

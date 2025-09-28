@@ -8,6 +8,7 @@ const handleError = (err) => ({
   error: err.response?.data?.error || err.message || "Unknown error",
 });
 
+
 // Courses
 export const getCourses = async () => {
   try {
@@ -29,6 +30,8 @@ export const getBatchesByCourse = async (courseId) => {
   }
 };
 
+
+
 // Subjects by course
 export const getSubjectsByCourse = async (courseId) => {
   if (!courseId) return [];
@@ -40,6 +43,8 @@ export const getSubjectsByCourse = async (courseId) => {
   }
 };
 
+
+
 // Faculties by role
 export const getFaculties = async (roleId) => {
   if (!roleId) return [];
@@ -50,6 +55,8 @@ export const getFaculties = async (roleId) => {
     return handleError(err);
   }
 };
+
+
 
 // Feedback types
 export const getFeedbackTypes = async () => {
@@ -64,10 +71,10 @@ export const getFeedbackTypes = async () => {
 
 
 // Feedback modules by feedback type
-export const getFeedbackModules = async (feedbacktype_id) => {
-  if (!feedbacktype_id) return [];
+export const getFeedbackModules = async (feedbackTypeId) => {
+  if (!feedbackTypeId) return [];
   try {
-    const res = await axios.get(`${API_BASE}/feedbackmoduletype/feedbacktype/${feedbacktype_id}`, { headers: { token: getToken() } });
+    const res = await axios.get(`${API_BASE}/feedbackmoduletype/type/${feedbackTypeId}`, { headers: { token: getToken() } });
     return res.data;
   } catch (err) {
     return handleError(err);
@@ -82,7 +89,7 @@ export const updateScheduleFeedback = async (id, payload) => {
     const res = await axios.put(`${API_BASE}/schedulefeedback/${id}`, payload, {
       headers: { token: getToken() }
     });
-    return res.data; // { status: 'success', data: updatedRecord }
+    return res.data; 
   } catch (err) {
     return handleError(err);
   }

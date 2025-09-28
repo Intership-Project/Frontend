@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import FacultySidebar from "../components/FacultySidebar";
 import "../components/FacultySidebar.css"; 
-import { fetchAssignedFiles } from "../services/facultyDashboard";
+import { fetchAssignedFiles } from "../services/homefaculty";
 import "./HomeFaculty.css";
+
+
+
 
 function HomeFaculty() {
   const [username, setUsername] = useState("");
@@ -28,7 +31,7 @@ function HomeFaculty() {
         <h2>Welcome, {username}</h2>
 
         <section className="pdf-section">
-          <h4>📄 Student Feedback PDFs</h4>
+          <h4> Student Feedback PDFs</h4>
           {pdfs.length === 0 ? (
             <p>No feedback PDFs available yet.</p>
           ) : (

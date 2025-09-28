@@ -5,7 +5,7 @@ import {
   fetchRecentFeedbacks,
   getFeedbackDetails,
   updateFeedbackStatus,   
-} from "../services/cchome";
+} from "../services/homecc";
 import "./HomeCC.css";
 import FacultySidebar from "../components/FacultySidebar";
 import "../components/FacultySidebar.css"; 
@@ -123,7 +123,7 @@ function HomeCC() {
 
         {/* Recent Feedbacks */}
         <section className="feedback-section">
-          <h4>📝 Recent Student Feedbacks</h4>
+          <h4> Recent Student Feedbacks</h4>
 
           {recentFeedbacks.length === 0 ? (
             <p>No feedbacks found.</p>
@@ -195,7 +195,7 @@ function HomeCC() {
                 ✖
               </button>
 
-              <h4>📋 Feedback Details</h4>
+              <h4> Feedback Details</h4>
 
               <div className="feedback-details">
                 {selectedFeedback.map((q, idx) => (
@@ -205,7 +205,7 @@ function HomeCC() {
                         Q{idx + 1}. {q.questiontext}
                       </strong>
                     </p>
-                    <p>⭐ Rating: {q.response_rating}</p>
+                    <p>Rating: {q.response_rating}</p>
                   </div>
                 ))}
               </div>

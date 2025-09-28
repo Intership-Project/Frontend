@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { fetchAllStudents, addStudent, updateStudent, deleteStudent } from '../services/student';
 import { getCourses } from '../services/course';
@@ -28,10 +27,15 @@ export default function Student() {
   }, []);
 
   const loadStudents = async () => {
-    const res = await fetchAllStudents();
-    if (res.status === 'success') setStudents(res.data);
-    else setError(res.error?.message || JSON.stringify(res.error));
-    setLoading(false);
+    try {
+      const res = await fetchAllStudents();
+      if (res.status === 'success') setStudents(res.data);
+      else setError(res.error?.message || JSON.stringify(res.error));
+    } catch {
+      setError('Failed to fetch students');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadCourses = async () => {
@@ -50,9 +54,7 @@ export default function Student() {
     if (res.status === 'success') {
       setStudents(students.filter(s => s.student_id !== id));
       alert('Student deleted successfully');
-    } else {
-      alert(`Delete failed: ${res.error?.message || JSON.stringify(res.error)}`);
-    }
+    } else alert(`Delete failed: ${res.error?.message || JSON.stringify(res.error)}`);
   };
 
   const openAddModal = () => {
@@ -99,17 +101,10 @@ export default function Student() {
     }
   };
 
-  const getCourseName = (id) => {
-    const course = courses.find(c => c.course_id === id);
-    return course ? course.coursename : 'Unknown';
-  };
+  const getCourseName = (id) => courses.find(c => c.course_id === id)?.coursename || 'Unknown';
+  const getBatchName = (id) => batches.find(b => b.batch_id === id)?.batchname || 'Unknown';
 
-  const getBatchName = (id) => {
-    const batch = batches.find(b => b.batch_id === id);
-    return batch ? batch.batchname : 'Unknown';
-  };
-
-  // Calculate total students per course
+  // Total students per course
   const studentCountPerCourse = courses.map(c => ({
     course_id: c.course_id,
     coursename: c.coursename,
@@ -123,25 +118,10 @@ export default function Student() {
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Student Management</h1>
 
-      {/* Summary Boxes for Students per Course */}
-      <div style={{
-        display: 'flex',
-        gap: '15px',
-        margin: '20px 0',
-        flexWrap: 'nowrap',
-        overflowX: 'auto'
-      }}>
+      {/* Summary Boxes */}
+      <div style={{ display: 'flex', gap: '15px', margin: '20px 0', overflowX: 'auto' }}>
         {studentCountPerCourse.map(c => (
-          <div
-            key={c.course_id}
-            style={{
-              flex: '0 0 150px',
-              padding: '15px',
-              background: '#ecf0f1',
-              borderRadius: '8px',
-              textAlign: 'center',
-            }}
-          >
+          <div key={c.course_id} style={{ flex: '0 0 150px', padding: '15px', background: '#ecf0f1', borderRadius: '8px', textAlign: 'center' }}>
             <h4 style={{ margin: '0 0 5px 0' }}>{c.coursename}</h4>
             <p style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>
               {c.count} Student{c.count !== 1 ? 's' : ''}
@@ -151,10 +131,7 @@ export default function Student() {
       </div>
 
       <div style={{ marginBottom: '20px' }}>
-        <button
-          onClick={openAddModal}
-          style={{ backgroundColor: '#27ae60', color: '#fff', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-        >
+        <button onClick={openAddModal} style={{ backgroundColor: '#27ae60', color: '#fff', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
           Add Student
         </button>
       </div>
@@ -162,7 +139,7 @@ export default function Student() {
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
-            <th>ID</th>
+            <th>S.No</th>
             <th>Name</th>
             <th>Email</th>
             <th>Course</th>
@@ -171,9 +148,9 @@ export default function Student() {
           </tr>
         </thead>
         <tbody>
-          {students.map(s => (
+          {students.map((s, index) => (
             <tr key={s.student_id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td>{s.student_id}</td>
+              <td>{index + 1}</td>
               <td>{s.studentname}</td>
               <td>{s.email}</td>
               <td>{getCourseName(s.course_id)}</td>
@@ -187,6 +164,7 @@ export default function Student() {
         </tbody>
       </table>
 
+      {/* Modal */}
       {showModal && (
         <div style={{ position: 'fixed', top:0,left:0,right:0,bottom:0, background:'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center' }}>
           <div style={{ background:'#fff', padding:'20px', borderRadius:'10px', width:'400px' }}>
@@ -200,10 +178,12 @@ export default function Student() {
                 <label>Email:</label>
                 <input type="email" required value={modalData.email} onChange={e => setModalData({ ...modalData, email: e.target.value })} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }} />
               </div>
-              {modalType==='add' && <div style={{ marginBottom: '10px' }}>
-                <label>Password:</label>
-                <input type="password" required value={modalData.password} onChange={e => setModalData({ ...modalData, password: e.target.value })} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }} />
-              </div>}
+              {modalType==='add' && (
+                <div style={{ marginBottom: '10px' }}>
+                  <label>Password:</label>
+                  <input type="password" required value={modalData.password} onChange={e => setModalData({ ...modalData, password: e.target.value })} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }} />
+                </div>
+              )}
               <div style={{ marginBottom: '10px' }}>
                 <label>Course:</label>
                 <select value={modalData.course_id} onChange={e => setModalData({ ...modalData, course_id: Number(e.target.value) })} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }}>

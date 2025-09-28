@@ -8,6 +8,7 @@ const handleError = (error) => ({
   error: error.response?.data?.error || error.message
 });
 
+
 // Fetch all faculty
 export const fetchAllFaculty = async () => {
   try {
@@ -35,6 +36,8 @@ export const getFacultiesByCourse = async (courseId) => {
   }
 };
 
+
+
 // Add faculty
 export const addFaculty = async (data) => {
   try {
@@ -56,6 +59,8 @@ export const addFaculty = async (data) => {
   }
 };
 
+
+
 // Update faculty
 export const updateFaculty = async (id, data) => {
   try {
@@ -76,6 +81,8 @@ export const updateFaculty = async (id, data) => {
     return handleError(err);
   }
 };
+
+
 
 // Delete faculty
 export const deleteFaculty = async (id) => {

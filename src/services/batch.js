@@ -33,6 +33,7 @@ export async function createBatch(data) {
   }
 }
 
+
 // UPDATE a batch
 export async function updateBatch(id, data) {
   try {
@@ -58,6 +59,7 @@ export async function deleteBatch(id) {
     return createError(err.response?.data?.error || err.message);
   }
 }
+
 
 // GET batches by course ID
 export async function getBatchesByCourse(courseId) {

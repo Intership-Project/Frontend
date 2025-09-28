@@ -1,6 +1,8 @@
 import axios from "axios";
 import { createUrl, createError } from "../utils";
 
+
+
 // Send reset token to user (faculty/admin)
 export async function forgotPassword(userType, email) {
   try {

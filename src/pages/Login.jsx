@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login as facultyLogin } from '../services/facultylogin';
-import { login as adminLogin } from '../services/admin';
+import { login as adminLogin } from '../services/adminlogin';
 
 export function Login() {
   const [userType, setUserType] = useState('faculty'); // faculty or admin

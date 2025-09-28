@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FacultySidebar from "../components/FacultySidebar";
 import "../components/FacultySidebar.css"; 
-import { changeFacultyPassword } from '../services/facultylogin';
+import { changeFacultyPassword } from '../services/changepassword';
 import { toast } from 'react-toastify'
 import './ChangePassword.css'
 

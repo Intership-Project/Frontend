@@ -113,43 +113,44 @@ export default function Course() {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {courses.map(c => (
-            <tr key={c.course_id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '10px', textAlign: 'center' }}>{c.course_id}</td>
-              <td>{c.coursename}</td>
-              <td>
-                <button
-                  onClick={() => handleEdit(c)}
-                  style={{
-                    backgroundColor: '#3498db',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                    marginRight: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(c.course_id)}
-                  style={{
-                    backgroundColor: '#e74c3c',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+       <tbody>
+  {courses.map((c, index) => (
+    <tr key={c.course_id} style={{ borderBottom: '1px solid #ddd' }}>
+      <td style={{ padding: '10px', textAlign: 'center' }}>{index + 1}</td> {/* S.No */}
+      <td>{c.coursename}</td>
+      <td>
+        <button
+          onClick={() => handleEdit(c)}
+          style={{
+            backgroundColor: '#3498db',
+            color: '#fff',
+            border: 'none',
+            padding: '5px 10px',
+            borderRadius: '5px',
+            marginRight: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDelete(c.course_id)}
+          style={{
+            backgroundColor: '#e74c3c',
+            color: '#fff',
+            border: 'none',
+            padding: '5px 10px',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
     </div>
   );

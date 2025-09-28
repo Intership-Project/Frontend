@@ -5,11 +5,14 @@ import { fetchCourseFeedbacks, downloadStudentResponsesPDF } from "../services/v
 import {jwtDecode} from "jwt-decode";
 import "./ViewStudentFeedback.css";
 
+
+
 export default function ViewStudentFeedback() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedFeedback, setExpandedFeedback] = useState(null);
   const [courseId, setCourseId] = useState(null);
+
 
   // Decode token to get course_id
   useEffect(() => {
@@ -60,7 +63,7 @@ export default function ViewStudentFeedback() {
     <>
       <FacultySidebar />
       <div className="feedback-container">
-        <h1>📄 Filled Feedbacks</h1>
+        <h1> Filled Feedbacks</h1>
 
         {feedbacks.length === 0 ? (
           <p>No feedbacks found.</p>

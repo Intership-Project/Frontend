@@ -1,4 +1,4 @@
-/* ==== Home Page Container ==== */
+/* Home Page Container */
 .home-container {
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -19,7 +19,7 @@
   color: #555;
 }
 
-/* ==== Stats Cards ==== */
+/*  Stats Cards  */
 .stats-section {
   margin-top: 25px;
 }
@@ -65,7 +65,7 @@
   color: #000 !important;
 }
 
-/* ==== Feedback Section ==== */
+/*  Feedback Section  */
 .feedback-section {
   margin-top: 30px;
   background: #f9f9f9;
@@ -140,7 +140,7 @@
 .btn-review { background: #28a745; color: white; }
 .btn-review:hover { background: #1e7e34; }
 
-/* ==== Modal Styles ==== */
+/* Modal Styles  */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -196,7 +196,7 @@
 .feedback-item strong { color: #2c3e50; }
 .feedback-item p { margin: 4px 0; }
 
-/* ==== ViewStudentFeedback Specific Styles ==== */
+/*  ViewStudentFeedback Specific Styles */
 .feedback-container {
   padding: 20px;
   font-family: Arial, sans-serif;

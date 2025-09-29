@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
@@ -47,6 +46,16 @@ export default function AdminLayout() {
                 style={{ color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
               >
                 👩‍🏫 <span>Faculty</span>
+              </Link>
+            </li>
+
+            {/** Faculty Report */}
+            <li style={{ marginBottom: '20px', fontSize: '20px' }}>
+              <Link
+                to="/admin/faculty-report"
+                style={{ color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
+              >
+                📑 <span>Faculty Report</span>
               </Link>
             </li>
 

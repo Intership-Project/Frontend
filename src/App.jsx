@@ -17,7 +17,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminLayout from "./pages/AdminLayout";
 import Batch from "./pages/Batch";
 import Course from "./pages/Course";
-//import Dashboard from "./pages/Dashboard";
+import FacultyReport from "./pages/FacultyReport";
 import Faculty from "./pages/Faculty";
 import FeedbackModuleType from "./pages/FeedbackModuletype";
 import FeedbackQuestion from "./pages/FeedbackQuestion";
@@ -66,6 +66,8 @@ function App() {
           <Route path="add-feedback" element={<AddFeedback />} />
           <Route path="FeedbackModuleTypes" element={<FeedbackModuleType />} />
           <Route path="feedback" element={<FilledFeedback />} />
+          <Route path="faculty-report" element={<FacultyReport />} />
+
         </Route>
       </Routes>
 

@@ -3,8 +3,8 @@ import { getCourses } from '../services/addfeedback';
 import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
 
 // Role mappings according to your table
-const getRoleNameById = (id) => ({ 2: 'Trainer', 3: 'Lab Mentor', 5: 'Course Cordinator' }[id] || 'Unknown');
-const getRoleIdByName = (name) => ({ 'Trainer': 2, 'Lab Mentor': 3, 'Course Cordinator': 5 }[name] || 2);
+const getRoleNameById = (id) => ({ 6: 'Trainer', 1: 'Lab Mentor', 7: 'Course Coordinator' }[id] || 'Unknown');
+const getRoleIdByName = (name) => ({ 'Trainer': 6, 'Lab Mentor': 1, 'Course Coordinator': 7 }[name] || 6);
 
 export default function Faculty() {
   const [facultyList, setFacultyList] = useState([]);
@@ -13,7 +13,7 @@ export default function Faculty() {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('add');
-  const [modalData, setModalData] = useState({ facultyname: '', email: '', password: '', role_id: 2, course_id: '' });
+  const [modalData, setModalData] = useState({ facultyname: '', email: '', password: '', role_id: 6, course_id: '' });
   const [editFacultyId, setEditFacultyId] = useState(null);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Faculty() {
 
   const openAddModal = () => {
     setModalType('add');
-    setModalData({ facultyname: '', email: '', password: '', role_id: 2, course_id: '' });
+    setModalData({ facultyname: '', email: '', password: '', role_id: 6, course_id: '' });
     setShowModal(true);
   };
 
@@ -82,7 +82,7 @@ export default function Faculty() {
       facultyname: modalData.facultyname || null,
       email: modalData.email || null,
       role_id: modalData.role_id ? Number(modalData.role_id) : null,
-      course_id: modalData.role_id === 5
+      course_id: modalData.role_id === 7
         ? (modalData.course_id ? Number(modalData.course_id) : null)
         : null,
       password: modalType === 'add'
@@ -126,7 +126,7 @@ export default function Faculty() {
 
   const trainerCount = facultyList.filter(f => f.rolename === 'Trainer').length;
   const labMentorCount = facultyList.filter(f => f.rolename === 'Lab Mentor').length;
-  const courseCordinatorCount = facultyList.filter(f => f.rolename === 'Course Coordinator').length;
+  const courseCoordinatorCount = facultyList.filter(f => f.rolename === 'Course Coordinator').length;
 
   return (
     <div style={{ padding:'20px', fontFamily:'Arial, sans-serif' }}>
@@ -139,7 +139,7 @@ export default function Faculty() {
           <h3>Total Lab Mentors</h3><p style={{ fontSize:'24px', fontWeight:'bold' }}>{labMentorCount}</p>
         </div>
         <div style={{ padding:'15px', background:'#ecf0f1', borderRadius:'8px', flex:1 }}>
-          <h3>Total Course Coordinators</h3><p style={{ fontSize:'24px', fontWeight:'bold' }}>{courseCordinatorCount}</p>
+          <h3>Total Course Coordinators</h3><p style={{ fontSize:'24px', fontWeight:'bold' }}>{courseCoordinatorCount}</p>
         </div>
       </div>
       <div style={{ marginBottom:'20px' }}>
@@ -182,12 +182,12 @@ export default function Faculty() {
               <div style={{ marginBottom:'10px' }}>
                 <label>Role:</label>
                 <select value={modalData.role_id} onChange={e=>setModalData({...modalData, role_id:Number(e.target.value)})} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }}>
-                  <option value={2}>Trainer</option>
-                  <option value={3}>Lab Mentor</option>
-                  <option value={5}>Course Cordinator</option>
+                  <option value={6}>Trainer</option>
+                  <option value={1}>Lab Mentor</option>
+                  <option value={7}>Course Coordinator</option>
                 </select>
               </div>
-              {modalData.role_id===5 && (
+              {modalData.role_id===7 && (
                 <div style={{ marginBottom:'10px' }}>
                   <label>Course:</label>
                   <select value={modalData.course_id} onChange={e=>setModalData({...modalData, course_id:e.target.value})} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }}>

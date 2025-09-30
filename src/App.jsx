@@ -32,6 +32,7 @@ import Faculty from "./pages/Faculty";
 import Student from "./pages/Student";
 import Subject from "./pages/Subject";
 import ScheduleForm from "./pages/ScheduleForm";
+import FacultyReport from "./pages/FacultyReport";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
           <Route path="add-feedback" element={<AddFeedback />} />
           <Route path="feedback-module-types" element={<FeedbackModuleType />} />
           <Route path="feedback" element={<FilledFeedback />} />
+          <Route path="faculty-report" element={<FacultyReport />} />
         </Route>
 
         {/* Fallback route */}

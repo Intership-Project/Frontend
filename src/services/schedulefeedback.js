@@ -13,7 +13,7 @@ function getToken() {
 
 export async function fetchAllScheduleFeedbacks() {
   try {
-    const res = await axios.get(createUrl('schedulefeedback'), {
+    const res = await axios.get(createUrl('schedulefeedback/stud'), {
       headers: { token: getToken() },
     });
     return res.data;

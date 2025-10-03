@@ -54,7 +54,7 @@ export default function Batch() {
       course_id: modalData.course_id || null,
     };
 
-    const course = courses.find(c => c.course_id === payload.course_id);
+    const course = courses.find(c => Number(c.course_id) === Number(payload.course_id));
 
     if (modalType === 'add') {
       const res = await createBatch(payload);
@@ -142,39 +142,39 @@ export default function Batch() {
           </tr>
         </thead>
         <tbody>
-  {batches.map((b, index) => (
-    <tr key={b.batch_id} style={{ borderBottom: '1px solid #ddd' }}>
-      <td>{index + 1}</td> {/* Sequential row number */}
-      <td>{b.batchname}</td>
-      <td>{b.coursename || 'Unknown'}</td>
-      <td>
-        <button
-          onClick={() => openEditModal(b)}
-          style={{
-            marginRight: '5px',
-            backgroundColor: '#3498db',
-            color: '#fff',
-            padding: '5px 10px',
-            borderRadius: '5px',
-          }}
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => handleDelete(b.batch_id)}
-          style={{
-            backgroundColor: '#e74c3c',
-            color: '#fff',
-            padding: '5px 10px',
-            borderRadius: '5px',
-          }}
-        >
-          Delete
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
+          {batches.map((b, index) => (
+            <tr key={b.batch_id} style={{ borderBottom: '1px solid #ddd' }}>
+              <td>{index + 1}</td> {/* Sequential row number */}
+              <td>{b.batchname}</td>
+              <td>{b.coursename || 'Unknown'}</td>
+              <td>
+                <button
+                  onClick={() => openEditModal(b)}
+                  style={{
+                    marginRight: '5px',
+                    backgroundColor: '#3498db',
+                    color: '#fff',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(b.batch_id)}
+                  style={{
+                    backgroundColor: '#e74c3c',
+                    color: '#fff',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                  }}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
 
       </table>
 

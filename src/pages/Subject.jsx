@@ -97,7 +97,7 @@ export default function Subject() {
 
   // Summary: number of subjects per course
   const subjectCounts = courses.map(course => {
-    const count = subjects.filter(s => s.course_id === course.course_id).length;
+    const count = subjects.filter(s => Number(s.course_id) === Number(course.course_id)).length;
     return { ...course, count };
   });
 

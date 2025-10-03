@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { createUrl, createError } from "../utils";
 
@@ -11,11 +12,13 @@ export async function fetchDashboardStats(courseId) {
       headers: { token },
     });
     console.log("API returned:", res.data);
-    return res.data;
+    return res.data; // <-- returns {success: true, data: {...}}
   } catch (ex) {
     return createError(ex.response?.data?.error || ex.message);
   }
 }
+
+
 
 // Fetch recent feedbacks for a course
 export async function fetchRecentFeedbacks(courseId) {

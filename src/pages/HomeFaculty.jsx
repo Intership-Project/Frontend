@@ -100,12 +100,12 @@ function HomeFaculty() {
           ) : (
             <div className="chart-wrapper">
               <h5>All Questions Combined</h5>
-              <PieChart width={500} height={400}>
+              <PieChart width={500} height={500}>
                 <Pie
                   data={getCombinedChartData()}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={160}
+                  cx="250"
+                  cy="250"
+                  outerRadius={130}
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
                   dataKey="value"

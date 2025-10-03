@@ -1,4 +1,3 @@
-// pages/Subject.jsx
 import React, { useEffect, useState } from 'react';
 import { getCourses } from '../services/course';
 import { createSubject, deleteSubject, getSubjects, updateSubject } from '../services/subject';
@@ -98,7 +97,7 @@ export default function Subject() {
 
   // Summary: number of subjects per course
   const subjectCounts = courses.map(course => {
-    const count = subjects.filter(s => s.course_id === course.course_id).length;
+    const count = subjects.filter(s => Number(s.course_id) === Number(course.course_id)).length;
     return { ...course, count };
   });
 
@@ -107,7 +106,7 @@ export default function Subject() {
       <h1>Subject Management</h1>
 
       {/* Course summary */}
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', flexWrap: 'nowrap', overflowX: 'auto' }}>
         {subjectCounts.map(c => (
           <div key={c.course_id} style={{ padding: '15px', background: '#ecf0f1', borderRadius: '8px', flex: 1, textAlign: 'center' }}>
             <h3>{c.coursename}</h3>
@@ -136,39 +135,28 @@ export default function Subject() {
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead style={{ backgroundColor: '#2c3e50', color: '#fff' }}>
           <tr>
-            <th>ID</th>
+            <th>S.No</th>
             <th>Subject Name</th>
             <th>Course</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {subjects.map((s) => (
+          {subjects.map((s, index) => (
             <tr key={s.subject_id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td>{s.subject_id}</td>
+              <td>{index + 1}</td>
               <td>{s.subjectname}</td>
               <td>{s.coursename || 'Unknown'}</td>
               <td>
                 <button
                   onClick={() => openEditModal(s)}
-                  style={{
-                    marginRight: '5px',
-                    backgroundColor: '#3498db',
-                    color: '#fff',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                  }}
+                  style={{ marginRight: '5px', backgroundColor: '#3498db', color: '#fff', padding: '5px 10px', borderRadius: '5px' }}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(s.subject_id)}
-                  style={{
-                    backgroundColor: '#e74c3c',
-                    color: '#fff',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                  }}
+                  style={{ backgroundColor: '#e74c3c', color: '#fff', padding: '5px 10px', borderRadius: '5px' }}
                 >
                   Delete
                 </button>
@@ -180,27 +168,8 @@ export default function Subject() {
 
       {/* Modal */}
       {showModal && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div
-            style={{
-              background: '#fff',
-              padding: '20px',
-              borderRadius: '10px',
-              width: '400px',
-            }}
-          >
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ background: '#fff', padding: '20px', borderRadius: '10px', width: '400px' }}>
             <h2>{modalType === 'add' ? 'Add Subject' : 'Edit Subject'}</h2>
             <form onSubmit={handleModalSave}>
               <div style={{ marginBottom: '10px' }}>
@@ -209,15 +178,8 @@ export default function Subject() {
                   type="text"
                   required
                   value={modalData.subjectname}
-                  onChange={(e) =>
-                    setModalData({ ...modalData, subjectname: e.target.value })
-                  }
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    borderRadius: '5px',
-                    border: '1px solid #ccc',
-                  }}
+                  onChange={(e) => setModalData({ ...modalData, subjectname: e.target.value })}
+                  style={{ width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
                 />
               </div>
               <div style={{ marginBottom: '10px' }}>
@@ -225,15 +187,8 @@ export default function Subject() {
                 <select
                   required
                   value={modalData.course_id}
-                  onChange={(e) =>
-                    setModalData({ ...modalData, course_id: e.target.value })
-                  }
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    borderRadius: '5px',
-                    border: '1px solid #ccc',
-                  }}
+                  onChange={(e) => setModalData({ ...modalData, course_id: e.target.value })}
+                  style={{ width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
                 >
                   <option value="">Select course</option>
                   {courses.map((c) => (
@@ -244,23 +199,10 @@ export default function Subject() {
                 </select>
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  style={{ padding: '8px 15px', borderRadius: '5px' }}
-                >
+                <button type="button" onClick={() => setShowModal(false)} style={{ padding: '8px 15px', borderRadius: '5px' }}>
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  style={{
-                    padding: '8px 15px',
-                    borderRadius: '5px',
-                    backgroundColor: '#27ae60',
-                    color: '#fff',
-                    border: 'none',
-                  }}
-                >
+                <button type="submit" style={{ padding: '8px 15px', borderRadius: '5px', backgroundColor: '#27ae60', color: '#fff', border: 'none' }}>
                   {modalType === 'add' ? 'Add' : 'Update'}
                 </button>
               </div>

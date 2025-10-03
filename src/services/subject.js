@@ -1,12 +1,15 @@
-// services/subject.js
 import axios from 'axios';
-import { createError, createUrl } from './utils';
+import { createError, createUrl } from '../utils';
+
+
 
 function getToken() {
   const token = sessionStorage.getItem('token');
   if (!token) throw new Error('Auth token not found. Please login.');
   return token;
 }
+
+
 
 // GET all subjects
 export async function getSubjects() {
@@ -21,6 +24,8 @@ export async function getSubjects() {
   }
 }
 
+
+
 // CREATE a new subject
 export async function createSubject(data) {
   try {
@@ -34,6 +39,7 @@ export async function createSubject(data) {
   }
 }
 
+
 // UPDATE a subject
 export async function updateSubject(id, data) {
   try {
@@ -46,6 +52,8 @@ export async function updateSubject(id, data) {
     return createError(err.response?.data?.error || err.message);
   }
 }
+
+
 
 // DELETE a subject
 export async function deleteSubject(id) {

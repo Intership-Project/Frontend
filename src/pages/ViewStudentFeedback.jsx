@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-//import Navbar from "../components/Navbar";
 import FacultySidebar from "../components/FacultySidebar";
 import "../components/FacultySidebar.css"; 
-import {
-  fetchCourseFeedbacks,
-  downloadStudentResponsesPDF,
-} from "../services/viewstudentfeedback";
-import { jwtDecode } from "jwt-decode";
+import { fetchCourseFeedbacks, downloadStudentResponsesPDF } from "../services/viewstudentfeedback";
+import {jwtDecode} from "jwt-decode";
 import "./ViewStudentFeedback.css";
+
+
 
 export default function ViewStudentFeedback() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -15,7 +13,7 @@ export default function ViewStudentFeedback() {
   const [expandedFeedback, setExpandedFeedback] = useState(null);
   const [courseId, setCourseId] = useState(null);
 
-  
+
   // Decode token to get course_id
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -28,7 +26,6 @@ export default function ViewStudentFeedback() {
       }
     }
   }, []);
-
 
   // Fetch all filled feedbacks (with responses embedded)
   useEffect(() => {
@@ -64,9 +61,9 @@ export default function ViewStudentFeedback() {
 
   return (
     <>
-      <FacultySidebar  />
+      <FacultySidebar />
       <div className="feedback-container">
-        <h1>📄 Filled Feedbacks</h1>
+        <h1> Filled Feedbacks</h1>
 
         {feedbacks.length === 0 ? (
           <p>No feedbacks found.</p>
@@ -115,8 +112,8 @@ export default function ViewStudentFeedback() {
                           <td colSpan={4} className="expanded-row">
                             {fb.responses && fb.responses.length > 0 ? (
                               fb.responses.map((r, idx) => (
-                                <div key={r.feedbackquestion_id} className="response-item">
-                                  <strong>Q{idx + 1}:</strong> {r.questiontext} <br />
+                                <div key={r.feedbackquestion_id ?? idx} className="response-item">
+                                  <strong>Q{idx + 1}:</strong> {r.question || r.questiontext} <br />
                                   <strong>Answer:</strong> {r.response_rating}
                                 </div>
                               ))

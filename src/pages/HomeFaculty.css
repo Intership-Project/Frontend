@@ -1,21 +1,29 @@
 .home-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fafc;
+  min-height: 100vh;
 }
 
-/* Make welcome message bigger and add more space below */
+/* Welcome message */
 .home-container h2 {
   color: #2c3e50;
-  font-size: 2.5rem;   /* Increased size */
-  margin-bottom: 40px; /* More space below */
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 35px;
 }
 
+/* PDF Section */
 .pdf-section {
-  margin-top: 30px;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
 }
 
 .pdf-section h4 {
-  font-size: 18px;
+  font-size: 1.25rem;
   color: #34495e;
   margin-bottom: 15px;
 }
@@ -26,8 +34,9 @@
 }
 
 .pdf-section ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .pdf-section li {
@@ -44,4 +53,56 @@
 .pdf-section a:hover {
   color: #0056b3;
   text-decoration: underline;
+}
+
+/* Feedback Summary Section */
+.chart-section {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chart-section h4 {
+  font-size: 1.25rem;
+  color: #34495e;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Responsive grid for multiple charts */
+.charts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+/* Chart wrapper */
+.chart-wrapper {
+  flex: 1 1 500px;   
+  max-width: 520px; 
+  background: #fefefe;
+  padding: 20px;     /* more padding */
+  border-radius: 10px;
+  text-align: center;
+}
+
+
+.chart-wrapper h5 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+/* Improve label visibility in PieChart */
+.recharts-wrapper text {
+  font-size: 13px !important;
+  overflow: visible !important;
+   white-space: normal !important; /* allow wrapping */
+}
+
+.recharts-legend-item-text {
+  font-size: 13px;
+  white-space: nowrap;
 }

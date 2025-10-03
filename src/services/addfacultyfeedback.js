@@ -1,27 +1,5 @@
 import axios from "axios";
-import { createUrl, createError } from "../utilss";
-
-
-
-
-// // Fetch feedback details for a specific schedule
-// export async function getCCFeedbackDetails(schedulefeedback_id) {
-//   try {
-//     const token = sessionStorage.getItem("token"); 
-//     const res = await axios.get(
-//       createUrl(`coursecordinator/feedbacks/${schedulefeedback_id}`),
-//       { headers: { token } }
-//     );
-
-//     if (res.data.status === "success") {
-//       return res.data.data;
-//     } else {
-//       return createError(res.data.error || "Failed to fetch details");
-//     }
-//   } catch (err) {
-//     return createError(err.message || "Server error");
-//   }
-// }
+import { createUrl, createError } from "../utils";
 
 
 
@@ -107,6 +85,7 @@ export async function fetchFeedbackTypes() {
 }
 
 
+
 // Fetch module types for selected feedback type
 export async function fetchModuleTypes(feedbackTypeId) {
   try {
@@ -143,3 +122,5 @@ export async function addFacultyFeedback({ courseId, batchId, subjectId, faculty
     return { status: "error", error: ex.response?.data?.error || ex.message };
   }
 }
+
+

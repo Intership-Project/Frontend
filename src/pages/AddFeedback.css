@@ -1,0 +1,54 @@
+.feedback-container {
+  max-width: 1200px;
+  margin: 30px auto;
+}
+
+.feedback-form, .feedback-list {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #f9f9f9;
+  margin-bottom: 30px;
+}
+
+.feedback-form h2, .feedback-list h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.grid-2 div label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.grid-2 div select, .grid-2 div input[type="date"], .grid-2 div input[type="file"] {
+  width: 100%;
+  padding: 5px;
+}
+
+.form-buttons {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.form-buttons .btn-success, .form-buttons .btn-secondary {
+  padding: 10px 30px;
+  margin-left: 10px;
+}
+
+.table-bordered {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table-bordered th, .table-bordered td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}

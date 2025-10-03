@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createError, createUrl } from "./utils";
+import { createError, createUrl } from "../utils";
 
 function getToken() {
   const token = sessionStorage.getItem("token");
@@ -20,6 +20,8 @@ export async function getFeedbackQuestions() {
   }
 }
 
+
+
 // CREATE a new feedback question
 export async function createFeedbackQuestion(data) {
   try {
@@ -32,6 +34,8 @@ export async function createFeedbackQuestion(data) {
     return createError(err.response?.data?.error || err.message);
   }
 }
+
+
 
 // UPDATE a feedback question
 export async function updateFeedbackQuestion(id, data) {
@@ -46,7 +50,9 @@ export async function updateFeedbackQuestion(id, data) {
   }
 }
 
-// DELETE a feedback question
+
+
+// DELETE a feedback question by admin
 export async function deleteFeedbackQuestion(id) {
   try {
     const res = await axios.delete(createUrl(`feedbackquestion/${id}`), {

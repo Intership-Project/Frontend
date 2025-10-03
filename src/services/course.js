@@ -1,6 +1,6 @@
 // services/course.js
 import axios from 'axios';
-import { createError, createUrl } from './utils';
+import { createError, createUrl } from '../utils';
 
 function getToken() {
   const token = sessionStorage.getItem('token');
@@ -21,6 +21,7 @@ export async function getCourses() {
   }
 }
 
+
 // CREATE a course
 export async function createCourse(data) {
   try {
@@ -34,6 +35,8 @@ export async function createCourse(data) {
   }
 }
 
+
+
 // UPDATE a course
 export async function updateCourse(id, data) {
   try {
@@ -46,6 +49,8 @@ export async function updateCourse(id, data) {
     return createError(err.response?.data?.error || err.message);
   }
 }
+
+
 
 // DELETE a course
 export async function deleteCourse(id) {

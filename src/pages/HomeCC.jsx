@@ -4,11 +4,11 @@ import {
   fetchDashboardStats,
   fetchRecentFeedbacks,
   getFeedbackDetails,
-  updateFeedbackStatus,   
-} from "../services/cchome";
+  updateFeedbackStatus,
+} from "../services/homecc";
 import "./HomeCC.css";
 import FacultySidebar from "../components/FacultySidebar";
-import "../components/FacultySidebar.css"; 
+import "../components/FacultySidebar.css";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -69,15 +69,15 @@ function HomeCC() {
   // Handle View Feedback
   async function handleView(feedbackId) {
     try {
-     
       const res = await getFeedbackDetails(feedbackId);
       if (res.status === "success") {
         setSelectedFeedback(res.data);
         setShowModal(true);
 
-        
+        // Update feedback status in backend
         await updateFeedbackStatus(feedbackId, "Reviewed");
 
+        // Update table locally
         setRecentFeedbacks((prev) =>
           prev.map((fb) =>
             fb.filledfeedbacks_id === feedbackId
@@ -85,6 +85,13 @@ function HomeCC() {
               : fb
           )
         );
+
+
+        // Update pendingReview count locally
+        setStats((prev) => ({
+          ...prev,
+          pendingReview: prev.pendingReview > 0 ? prev.pendingReview - 1 : 0,
+        }));
       } else {
         alert("Error: " + res.error);
       }
@@ -92,6 +99,7 @@ function HomeCC() {
       console.error("Error viewing feedback:", err);
     }
   }
+
 
   if (loading) return <p>Loading...</p>;
 
@@ -108,7 +116,7 @@ function HomeCC() {
           <div className="stats-grid">
             <div className="stat-card bg-blue">
               <h5>Total Student Feedback</h5>
-              <p>{stats.totalFeedback || 0}</p>
+              <p>{stats.totalFeedbacks || 0}</p>
             </div>
             <div className="stat-card bg-orange">
               <h5>Pending Feedback Review</h5>
@@ -123,7 +131,7 @@ function HomeCC() {
 
         {/* Recent Feedbacks */}
         <section className="feedback-section">
-          <h4>📝 Recent Student Feedback</h4>
+          <h4> Recent Student Feedbacks</h4>
 
           {recentFeedbacks.length === 0 ? (
             <p>No feedbacks found.</p>
@@ -165,6 +173,7 @@ function HomeCC() {
                       >
                         {fb.review_status}
                       </span>
+
                     </td>
                     <td>
                       <button
@@ -173,7 +182,7 @@ function HomeCC() {
                       >
                         View
                       </button>
-  
+
                     </td>
                   </tr>
                 ))}
@@ -195,7 +204,7 @@ function HomeCC() {
                 ✖
               </button>
 
-              <h4>📋 Feedback Details</h4>
+              <h4> Feedback Details</h4>
 
               <div className="feedback-details">
                 {selectedFeedback.map((q, idx) => (
@@ -205,7 +214,7 @@ function HomeCC() {
                         Q{idx + 1}. {q.questiontext}
                       </strong>
                     </p>
-                    <p>⭐ Rating: {q.response_rating}</p>
+                    <p>Rating: {q.response_rating}</p>
                   </div>
                 ))}
               </div>

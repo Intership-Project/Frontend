@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { createError, createUrl } from './utils';
+import { createError, createUrl } from '../utils';
+
+
 
 function getToken() {
   const token = sessionStorage.getItem('token');
@@ -7,9 +9,11 @@ function getToken() {
   return token;
 }
 
+
+
 export async function fetchAllScheduleFeedbacks() {
   try {
-    const res = await axios.get(createUrl('schedulefeedback'), {
+    const res = await axios.get(createUrl('schedulefeedback/stud'), {
       headers: { token: getToken() },
     });
     return res.data;
@@ -33,6 +37,9 @@ export async function deleteScheduleFeedback(id) {
   }
 }
 
+
+
+
 export async function updateFeedbackStatus(id, status) {
   try {
     const res = await axios.patch(createUrl(`schedulefeedback/${id}/status`), { status }, {
@@ -44,6 +51,9 @@ export async function updateFeedbackStatus(id, status) {
     return createError(error.response?.data?.error || error.message);
   }
 }
+
+
+
 
 // New: Update schedule feedback (for Edit)
 export async function updateScheduleFeedback(id, data) {

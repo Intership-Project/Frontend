@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { getCourses } from '../services/addfeedback';
 import { addFaculty, deleteFaculty, fetchAllFaculty, updateFaculty } from '../services/facultylist';
 
-// Role mappings according to your table
-const getRoleNameById = (id) => ({ 2: 'Trainer', 3: 'Lab Mentor', 5: 'Course Cordinator' }[id] || 'Unknown');
-const getRoleIdByName = (name) => ({ 'Trainer': 2, 'Lab Mentor': 3, 'Course Cordinator': 5 }[name] || 2);
+// Updated Role mappings according to your table
+const getRoleNameById = (id) => ({ 1: 'Lab Mentor', 2: 'Trainer', 3: 'Course Coordinator' }[id] || 'Unknown');
+const getRoleIdByName = (name) => ({ 'Lab Mentor': 1, 'Trainer': 2, 'Course Coordinator': 3 }[name] || 2);
 
 export default function Faculty() {
   const [facultyList, setFacultyList] = useState([]);
@@ -82,7 +82,7 @@ export default function Faculty() {
       facultyname: modalData.facultyname || null,
       email: modalData.email || null,
       role_id: modalData.role_id ? Number(modalData.role_id) : null,
-      course_id: modalData.role_id === 5
+      course_id: modalData.role_id === 3
         ? (modalData.course_id ? Number(modalData.course_id) : null)
         : null,
       password: modalType === 'add'
@@ -149,17 +149,21 @@ export default function Faculty() {
         <thead style={{ backgroundColor:'#2c3e50', color:'#fff' }}>
           <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
         </thead>
-        <tbody>
-          {facultyList.map(f => (
-            <tr key={f.faculty_id} style={{ borderBottom:'1px solid #ddd' }}>
-              <td>{f.faculty_id}</td><td>{f.facultyname}</td><td>{f.email}</td><td>{f.rolename}</td>
-              <td>
-                <button onClick={()=>openEditModal(f)} style={{ marginRight:'5px', backgroundColor:'#3498db', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Edit</button>
-                <button onClick={()=>handleDelete(f.faculty_id)} style={{ backgroundColor:'#e74c3c', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+       <tbody>
+  {facultyList.map((f, index) => (
+    <tr key={f.faculty_id} style={{ borderBottom:'1px solid #ddd' }}>
+      <td>{index + 1}</td> {/* S.No */}
+      <td>{f.facultyname}</td>
+      <td>{f.email}</td>
+      <td>{f.rolename}</td>
+      <td>
+        <button onClick={()=>openEditModal(f)} style={{ marginRight:'5px', backgroundColor:'#3498db', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Edit</button>
+        <button onClick={()=>handleDelete(f.faculty_id)} style={{ backgroundColor:'#e74c3c', color:'#fff', padding:'5px 10px', borderRadius:'5px' }}>Delete</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
 
       {showModal && (
@@ -183,11 +187,11 @@ export default function Faculty() {
                 <label>Role:</label>
                 <select value={modalData.role_id} onChange={e=>setModalData({...modalData, role_id:Number(e.target.value)})} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }}>
                   <option value={2}>Trainer</option>
-                  <option value={3}>Lab Mentor</option>
-                  <option value={5}>Course Cordinator</option>
+                  <option value={1}>Lab Mentor</option>
+                  <option value={3}>Course Coordinator</option>
                 </select>
               </div>
-              {modalData.role_id===5 && (
+              {modalData.role_id===3 && (
                 <div style={{ marginBottom:'10px' }}>
                   <label>Course:</label>
                   <select value={modalData.course_id} onChange={e=>setModalData({...modalData, course_id:e.target.value})} style={{ width:'100%', padding:'8px', borderRadius:'5px', border:'1px solid #ccc' }}>

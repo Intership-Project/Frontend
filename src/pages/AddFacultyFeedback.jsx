@@ -13,6 +13,9 @@ import {
 } from "../services/addfacultyfeedback";
 import "./AddFacultyFeedback.css";
 
+
+
+
 function AddFacultyFeedback() {
   const [courseId, setCourseId] = useState(""); // CC's assigned course
   const [batchId, setBatchId] = useState("");
@@ -147,7 +150,7 @@ function AddFacultyFeedback() {
       setDate("");
       setPdfFile(null);
       setBatches([]);
-      setSubjects(subjects); // keep subjects (don’t clear)
+      setSubjects(subjects); // keep subjects 
       setFeedbackModuleTypes([]);
     } else {
       toast.error(result.error || "Something went wrong");
@@ -269,3 +272,6 @@ function AddFacultyFeedback() {
 }
 
 export default AddFacultyFeedback;
+
+
+

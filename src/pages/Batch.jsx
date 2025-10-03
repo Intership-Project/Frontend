@@ -54,7 +54,7 @@ export default function Batch() {
       course_id: modalData.course_id || null,
     };
 
-    const course = courses.find(c => c.course_id === payload.course_id);
+    const course = courses.find(c => Number(c.course_id) === Number(payload.course_id));
 
     if (modalType === 'add') {
       const res = await createBatch(payload);
@@ -142,9 +142,9 @@ export default function Batch() {
           </tr>
         </thead>
         <tbody>
-          {batches.map((b) => (
+          {batches.map((b, index) => (
             <tr key={b.batch_id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td>{b.batch_id}</td>
+              <td>{index + 1}</td> {/* Sequential row number */}
               <td>{b.batchname}</td>
               <td>{b.coursename || 'Unknown'}</td>
               <td>
@@ -175,6 +175,7 @@ export default function Batch() {
             </tr>
           ))}
         </tbody>
+
       </table>
 
       {showModal && (

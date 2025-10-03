@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login as facultyLogin } from '../services/facultylogin';
-import { login as adminLogin } from '../services/admin';
+import { login as adminLogin } from '../services/adminlogin';
 
 export function Login() {
   const [userType, setUserType] = useState('faculty'); // faculty or admin
@@ -36,7 +36,7 @@ export function Login() {
 
         if (data.rolename === 'Course Coordinator') navigate('/homecc');
         else if (data.rolename === 'Trainer' || data.rolename === 'Lab Mentor') navigate('/homefaculty');
-        else navigate('/home');
+        else navigate('/homefaculty'); // <- changed from /home
       } else {
         toast.error(result?.error || 'Invalid email or password');
       }
@@ -48,7 +48,7 @@ export function Login() {
         sessionStorage.setItem('usertype', 'Admin');
         sessionStorage.setItem('adminId', data.adminId);
         toast.success('Admin login successful');
-        navigate('/admin/Home');
+        navigate('/admin'); // <- fixed: redirect to admin layout's index route (AdminDashboard)
       } else {
         toast.error(result?.error || 'Invalid email or password');
       }
@@ -125,3 +125,7 @@ export function Login() {
 }
 
 export default Login;
+
+
+
+

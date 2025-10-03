@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-    createFeedbackQuestion,
-    deleteFeedbackQuestion,
-    getFeedbackQuestions,
-    updateFeedbackQuestion,
+  createFeedbackQuestion,
+  deleteFeedbackQuestion,
+  getFeedbackQuestions,
+  updateFeedbackQuestion,
 } from "../services/feedbackquestion";
-import { getFeedbackTypes } from "../services/feedbacktype"; // to fetch Theory/Lab etc.
+import { getFeedbackTypes } from "../services/feedbacktype";
 
 export default function FeedbackQuestion() {
   const [questions, setQuestions] = useState([]);
@@ -58,7 +58,6 @@ export default function FeedbackQuestion() {
       questiontext: modalData.questiontext,
       feedbacktype_id: modalData.feedbacktype_id,
     };
-
     const type = feedbackTypes.find((t) => t.feedbacktype_id === Number(payload.feedbacktype_id));
 
     if (modalType === "add") {
@@ -124,16 +123,16 @@ export default function FeedbackQuestion() {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead style={{ backgroundColor: "#2c3e50", color: "#fff" }}>
           <tr>
-            <th>ID</th>
+            <th>S.No</th>
             <th>Question</th>
             <th>Feedback Type</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {questions.map((q) => (
+          {questions.map((q, index) => (
             <tr key={q.feedbackquestion_id} style={{ borderBottom: "1px solid #ddd" }}>
-              <td>{q.feedbackquestion_id}</td>
+              <td>{index + 1}</td>
               <td>{q.questiontext}</td>
               <td>{q.fbtypename || "Unknown"}</td>
               <td>
@@ -166,6 +165,7 @@ export default function FeedbackQuestion() {
         </tbody>
       </table>
 
+      {/* Modal */}
       {showModal && (
         <div
           style={{

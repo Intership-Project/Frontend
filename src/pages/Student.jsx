@@ -50,11 +50,14 @@ export default function Student() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this student?')) return;
-    const res = await deleteStudent(id);
-    if (res.status === 'success') {
-      setStudents(students.filter(s => s.student_id !== id));
-      alert('Student deleted successfully');
-    } else alert(`Delete failed: ${res.error?.message || JSON.stringify(res.error)}`);
+   const res = await deleteStudent(id);
+if (res.status === 'success' || res.success === true || res.message?.toLowerCase().includes('deleted')) {
+  setStudents(students.filter(s => s.student_id !== id));
+  alert('Student deleted successfully');
+} else {
+  console.error('Delete error:', res);
+  alert(`Delete failed: ${res.error?.message || res.message || JSON.stringify(res)}`);
+}
   };
 
   const openAddModal = () => {

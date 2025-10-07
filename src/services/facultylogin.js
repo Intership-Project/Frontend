@@ -28,7 +28,7 @@ export async function register(name, email, password, roleId, courseId = null) {
 
 export async function fetchCourses() {
   try {
-    const url = createUrl("course");
+    const url = createUrl("course/public");
     const response = await axios.get(url);
     return response.data;
   } catch (ex) {

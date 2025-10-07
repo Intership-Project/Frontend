@@ -46,7 +46,7 @@ export const addFaculty = async (data) => {
       email: data.email || null,
       password: data.password || null,
       role_id: data.role_id ? Number(data.role_id) : null,
-      ...(data.role_id === 7
+      ...(data.role_id === 3
         ? { course_id: data.course_id ? Number(data.course_id) : null }
         : {})
     };
@@ -68,7 +68,7 @@ export const updateFaculty = async (id, data) => {
       facultyname: data.facultyname || null,
       email: data.email || null,
       role_id: data.role_id ? Number(data.role_id) : null,
-      ...(data.role_id === 7
+      ...(data.role_id === 3
         ? { course_id: data.course_id ? Number(data.course_id) : null }
         : {}),
       password: data.password !== undefined ? data.password : undefined

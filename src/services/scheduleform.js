@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = "studentfeedbacksystem.up.railway.app";
 const getToken = () => sessionStorage.getItem("token");
 
 const handleError = (err) => ({

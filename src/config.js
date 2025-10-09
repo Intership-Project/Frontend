@@ -1,5 +1,5 @@
 const config = {
-    server: 'http://localhost:4000'
+    server: 'studentfeedbacksystem.up.railway.app'
 };
 
 export default config;
